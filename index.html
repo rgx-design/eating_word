@@ -1133,37 +1133,69 @@ function showSpeechStatus(msg, type = 'info') {
   setTimeout(() => toast.remove(), 3000);
 }
 
-function speakWord(text) {
+let speechDebounce = false;
+let speechRetryCount = 0;
+
+function speakWord(text, retry = false) {
   if (!speechSupported) {
     showSpeechStatus('❌ 浏览器不支持语音合成', 'error');
     return;
   }
+  
   if (!speechReady) {
     speechVoices = speechSynthesis.getVoices();
     speechReady = true;
   }
-  speechSynthesis.cancel();
-  setTimeout(() => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.85;
-    utterance.pitch = 1.1;
-    utterance.volume = 1.0;
+  
+  if (speechDebounce && !retry) {
+    return;
+  }
+  
+  if (!retry) {
+    speechDebounce = true;
+    speechRetryCount = 0;
+    setTimeout(() => { speechDebounce = false; }, 800);
+  }
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.85;
+  utterance.pitch = 1.1;
+  utterance.volume = 1.0;
+  
+  const enVoice = speechVoices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
+    || speechVoices.find(v => v.lang.startsWith('en-US'))
+    || speechVoices.find(v => v.lang.startsWith('en'));
+  if (enVoice) {
+    utterance.voice = enVoice;
+  }
+  
+  utterance.onerror = (e) => {
+    console.error('Speech error:', e);
+    const errorMsg = e.error || 'unknown';
     
-    const enVoice = speechVoices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
-      || speechVoices.find(v => v.lang.startsWith('en-US'))
-      || speechVoices.find(v => v.lang.startsWith('en'));
-    if (enVoice) {
-      utterance.voice = enVoice;
+    if (errorMsg === 'interrupted' && speechRetryCount < 2) {
+      speechRetryCount++;
+      setTimeout(() => {
+        speakWord(text, true);
+      }, 200);
+      return;
     }
     
-    utterance.onerror = (e) => {
-      console.error('Speech error:', e);
-      showSpeechStatus('❌ 发音失败: ' + e.error, 'error');
-    };
-    
-    speechSynthesis.speak(utterance);
-  }, 50);
+    if (errorMsg === 'not-allowed') {
+      showSpeechStatus('⚠️ 语音权限被阻止，请点击页面后重试', 'error');
+    } else if (errorMsg === 'interrupted') {
+      showSpeechStatus('⚠️ 发音被中断，请点击卡片重试', 'info');
+    } else {
+      showSpeechStatus('❌ 发音失败: ' + errorMsg, 'error');
+    }
+  };
+  
+  utterance.onend = () => {
+    speechRetryCount = 0;
+  };
+  
+  speechSynthesis.speak(utterance);
 }
 
 // Prime speech synthesis on first user interaction
