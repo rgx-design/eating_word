@@ -30,7 +30,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .menu-header .btns{display:flex;gap:10px;flex-wrap:wrap}
 .menu-header .btns button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:var(--font);transition:.2s;font-size:.95em}
 .btn-dashboard{background:var(--secondary);color:#fff}.btn-speak-test{background:#4CAF50;color:#fff}.btn-logout{background:#eee;color:var(--text)}
-.btn-dashboard:hover,.btn-logout:hover{transform:translateY(-1px)}
+.btn-dashboard:hover,.btn-speak-test:hover,.btn-logout:hover{transform:translateY(-1px)}
+.speech-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:10px;color:#fff;font-weight:600;font-size:1em;z-index:200;box-shadow:0 4px 15px rgba(0,0,0,0.2);animation:toastPop .3s ease forwards}
 .menu-content{width:100%;max-width:900px;display:flex;flex-direction:column;gap:20px}
 .menu-section{background:var(--card);border-radius:var(--radius);padding:25px;box-shadow:var(--shadow);border:1px solid var(--border)}
 .menu-section h3{margin-bottom:15px;font-size:1.15em;color:var(--text);display:flex;align-items:center;gap:8px}
@@ -90,6 +91,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .feedback-overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;font-size:3em;font-weight:900;pointer-events:none;animation:feedbackPop .8s ease forwards}
 .feedback-overlay.correct-fb{color:var(--success)}.feedback-overlay.wrong-fb{color:var(--danger)}
 @keyframes feedbackPop{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+@keyframes toastPop{0%{opacity:0;transform:translateX(-50%) translateY(-20px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
 
 .dashboard-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:200;display:none;justify-content:flex-end}
 .dashboard-overlay.open{display:flex}
@@ -756,13 +758,43 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 document.getElementById('btn-speak-test').addEventListener('click', () => {
+  const diag = getSpeechDiagnostic();
+  
+  if (!diag.supported) {
+    showSpeechStatus('❌ 浏览器不支持语音合成 API', 'error');
+    return;
+  }
+  
+  if (!diag.voicesLoaded || diag.voiceCount === 0) {
+    showSpeechStatus('⏳ 语音引擎正在加载...请稍后重试', 'info');
+    loadVoices();
+    setTimeout(() => {
+      const diag2 = getSpeechDiagnostic();
+      if (diag2.voiceCount > 0) {
+        runPronunciationTest();
+      } else {
+        showSpeechStatus('❌ 无法加载语音引擎，请检查浏览器设置', 'error');
+      }
+    }, 500);
+    return;
+  }
+  
+  if (diag.englishVoices === 0) {
+    showSpeechStatus('⚠️ 未检测到英语语音，使用系统默认语音', 'info');
+  }
+  
+  runPronunciationTest();
+});
+
+function runPronunciationTest() {
   const allWords = [];
   for (const bank of Object.values(WORD_BANKS)) {
     allWords.push(...bank.words);
   }
   const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
   speakWord(randomWord.en);
-});
+  showSpeechStatus('🔊 正在播放: ' + randomWord.en, 'success');
+}
 
 // ==================== GAME ENGINE ====================
 document.getElementById('btn-start-game').addEventListener('click', startGame);
@@ -1065,47 +1097,71 @@ function showFeedback(type) {
 // ==================== SPEECH SYNTHESIS ====================
 let speechVoices = [];
 let speechReady = false;
+let speechSupported = 'speechSynthesis' in window;
 
-// Preload voices
 function loadVoices() {
-  if ('speechSynthesis' in window) {
-    speechVoices = speechSynthesis.getVoices();
-    if (speechVoices.length > 0) {
-      speechReady = true;
-    }
+  if (!speechSupported) return;
+  speechVoices = speechSynthesis.getVoices();
+  if (speechVoices.length > 0) {
+    speechReady = true;
   }
 }
 loadVoices();
-if ('speechSynthesis' in window) {
+if (speechSupported) {
   speechSynthesis.onvoiceschanged = () => {
     speechVoices = speechSynthesis.getVoices();
     speechReady = true;
   };
 }
 
+function getSpeechDiagnostic() {
+  const result = {
+    supported: speechSupported,
+    voicesLoaded: speechReady,
+    voiceCount: speechVoices.length,
+    englishVoices: speechVoices.filter(v => v.lang.startsWith('en')).length
+  };
+  return result;
+}
+
+function showSpeechStatus(msg, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = 'speech-toast';
+  toast.textContent = msg;
+  toast.style.background = type === 'error' ? '#ff6b6b' : type === 'success' ? '#4ecdc4' : '#4a90d9';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
 function speakWord(text) {
-  if (!('speechSynthesis' in window)) return;
-  // Ensure voices are loaded
+  if (!speechSupported) {
+    showSpeechStatus('❌ 浏览器不支持语音合成', 'error');
+    return;
+  }
   if (!speechReady) {
     speechVoices = speechSynthesis.getVoices();
     speechReady = true;
   }
-  // Cancel any ongoing speech
   speechSynthesis.cancel();
-  // Small delay to ensure cancel completes
   setTimeout(() => {
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-US';
     utterance.rate = 0.85;
     utterance.pitch = 1.1;
     utterance.volume = 1.0;
-    // Try to find an English voice
+    
     const enVoice = speechVoices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
       || speechVoices.find(v => v.lang.startsWith('en-US'))
       || speechVoices.find(v => v.lang.startsWith('en'));
     if (enVoice) {
       utterance.voice = enVoice;
     }
+    
+    utterance.onerror = (e) => {
+      console.error('Speech error:', e);
+      showSpeechStatus('❌ 发音失败: ' + e.error, 'error');
+    };
+    
     speechSynthesis.speak(utterance);
   }, 50);
 }
