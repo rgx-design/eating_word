@@ -74,11 +74,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .word-cn{font-size:1.1em;color:var(--text-light);margin-top:6px;z-index:2;position:relative;font-weight:500}
 .card-damage{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3;border-radius:20px;overflow:hidden}
 .card-damage-hole{position:absolute;background:var(--bg);border-radius:50%}
-.animal{position:absolute;z-index:6;pointer-events:none;font-size:2.2em;filter:drop-shadow(2px 2px 2px rgba(0,0,0,0.15));display:inline-block;width:40px;height:40px;line-height:40px;text-align:center}
-.animal.animal-img{width:48px;height:48px;line-height:48px}
-.animal img{width:100%;height:100%;object-fit:contain;display:block}
-.animal.eating{animation:nomNom .3s ease infinite}
-@keyframes nomNom{0%,100%{margin-top:0}50%{margin-top:-6px}}
+.animal{position:absolute;z-index:6;pointer-events:none;display:inline-block;width:40px;height:40px}
+.animal-inner{width:100%;height:100%;font-size:2.2em;filter:drop-shadow(2px 2px 2px rgba(0,0,0,0.15));line-height:40px;text-align:center;transition:transform 0.15s linear}
+.animal-inner.animal-img{width:48px;height:48px;line-height:48px}
+.animal-inner img{width:100%;height:100%;object-fit:contain;display:block}
+.animal.eating .animal-inner{animation:nomNom .3s ease infinite}
+@keyframes nomNom{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .game-input-area{width:100%;max-width:600px;padding:15px 20px;display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.95);box-shadow:0 -2px 10px rgba(0,0,0,0.05);z-index:10;border-radius:16px 16px 0 0;flex-wrap:wrap}
 .game-input-area input{flex:1;min-width:160px;padding:14px 18px;border:3px solid var(--border);border-radius:12px;font-size:1.2em;font-family:var(--font);outline:none;transition:border-color .2s;background:#fff}
 .game-input-area input:focus{border-color:var(--secondary)}
@@ -896,8 +897,10 @@ function nextWord() {
   document.getElementById('game-input').value = '';
   document.getElementById('game-input').focus();
   
-  // Speak word
-  speakWord(gameState.currentWord.en);
+  // Speak word after card renders
+  setTimeout(() => {
+    speakWord(gameState.currentWord.en);
+  }, 150);
   
   // Spawn animals
   spawnAnimals();
@@ -1130,17 +1133,21 @@ function spawnAnimals() {
     el.dataset.type = type.name;
     el.dataset.rotationOffset = type.rotationOffset || 0;
     
+    const inner = document.createElement('div');
+    inner.className = 'animal-inner';
+    
     if (type.img) {
-      // Use PNG image for this animal
       const img = document.createElement('img');
       img.src = type.img;
       img.alt = type.name;
       img.draggable = false;
-      el.appendChild(img);
-      el.classList.add('animal-img');
+      inner.appendChild(img);
+      inner.classList.add('animal-img');
     } else {
-      el.textContent = type.emoji;
+      inner.textContent = type.emoji;
     }
+    
+    el.appendChild(inner);
     
     // Position at random edge
     const edge = Math.floor(Math.random() * 4);
@@ -1186,7 +1193,6 @@ function moveAnimals() {
     const offset = parseFloat(animal.dataset.rotationOffset) || 0;
     const rotation = angle + offset;
     animal.style.transform = `rotate(${rotation}deg)`;
-    animal.style.transition = 'transform 0.15s linear';
     
     if (dist < 60) {
       // Reached the card - eating animation
