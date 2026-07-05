@@ -29,7 +29,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .menu-header .user-info .avatar{width:36px;height:36px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2em}
 .menu-header .btns{display:flex;gap:10px;flex-wrap:wrap}
 .menu-header .btns button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:var(--font);transition:.2s;font-size:.95em}
-.btn-dashboard{background:var(--secondary);color:#fff}.btn-logout{background:#eee;color:var(--text)}
+.btn-dashboard{background:var(--secondary);color:#fff}.btn-speak-test{background:#4CAF50;color:#fff}.btn-logout{background:#eee;color:var(--text)}
 .btn-dashboard:hover,.btn-logout:hover{transform:translateY(-1px)}
 .menu-content{width:100%;max-width:900px;display:flex;flex-direction:column;gap:20px}
 .menu-section{background:var(--card);border-radius:var(--radius);padding:25px;box-shadow:var(--shadow);border:1px solid var(--border)}
@@ -156,6 +156,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="user-info"><div class="avatar" id="menu-avatar">🐣</div><span id="menu-username"></span></div>
     <div class="btns">
       <button class="btn-dashboard" id="btn-open-dashboard">📊 学习中心</button>
+      <button class="btn-speak-test" id="btn-speak-test">🔊 发音测试</button>
       <button class="btn-logout" id="btn-logout">退出登录</button>
     </div>
   </div>
@@ -752,6 +753,10 @@ document.getElementById('btn-logout').addEventListener('click', () => {
   currentUserData = null;
   selectedBank = null;
   showScreen('auth-screen');
+});
+
+document.getElementById('btn-speak-test').addEventListener('click', () => {
+  speakWord('Hello, this is a pronunciation test. Can you hear me?');
 });
 
 // ==================== GAME ENGINE ====================
