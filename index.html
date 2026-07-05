@@ -756,7 +756,12 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 });
 
 document.getElementById('btn-speak-test').addEventListener('click', () => {
-  speakWord('Hello, this is a pronunciation test. Can you hear me?');
+  const allWords = [];
+  for (const bank of Object.values(WORD_BANKS)) {
+    allWords.push(...bank.words);
+  }
+  const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+  speakWord(randomWord.en);
 });
 
 // ==================== GAME ENGINE ====================
