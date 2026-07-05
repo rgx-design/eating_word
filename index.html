@@ -898,6 +898,10 @@ function startGame() {
   updateTimerDisplay();
   document.getElementById('game-timer').classList.remove('warning');
   document.getElementById('game-input').value = '';
+  
+  // Preload audio files for all selected words
+  preloadAudio(selected);
+  
   document.getElementById('game-input').focus();
   
   // Start game timer
@@ -1144,6 +1148,7 @@ function showSpeechStatus(msg, type = 'info') {
 let speechDebounce = false;
 let speechRetryCount = 0;
 let speechUtteranceTimeout = null;
+const audioCache = {};
 
 function speakWord(word, retry = false) {
   const text = typeof word === 'string' ? word : (word && word.en ? word.en : '');
@@ -1165,12 +1170,44 @@ function speakWord(word, retry = false) {
   }
 }
 
+function preloadAudio(words) {
+  let loadedCount = 0;
+  const total = words.filter(w => w.audio).length;
+  
+  if (total === 0) return;
+  
+  console.log(`Preloading ${total} audio files...`);
+  
+  words.forEach(word => {
+    if (!word.audio) return;
+    
+    const audio = new Audio(word.audio);
+    audio.preload = 'auto';
+    audioCache[word.audio] = audio;
+    
+    audio.onloadeddata = () => {
+      loadedCount++;
+      console.log(`Audio loaded: ${word.en} (${loadedCount}/${total})`);
+    };
+    
+    audio.onerror = () => {
+      console.warn(`Failed to preload: ${word.en}`);
+    };
+  });
+}
+
 function playLocalAudio(audioPath, text) {
   if (speechUtteranceTimeout) {
     clearTimeout(speechUtteranceTimeout);
   }
   
-  const audio = new Audio(audioPath);
+  let audio = audioCache[audioPath];
+  if (!audio) {
+    audio = new Audio(audioPath);
+    audioCache[audioPath] = audio;
+  }
+  
+  audio.currentTime = 0;
   
   audio.onplaying = () => {
     console.log('Local audio playing:', text, audioPath);
@@ -1474,6 +1511,11 @@ function endGame(completed) {
   clearCardState();
   if (gameState.damageInterval) clearInterval(gameState.damageInterval);
   if (gameState.animalMoveInterval) clearInterval(gameState.animalMoveInterval);
+  
+  for (const key in audioCache) {
+    audioCache[key].pause();
+  }
+  Object.keys(audioCache).forEach(key => delete audioCache[key]);
   
   currentUserData.gamesPlayed = (currentUserData.gamesPlayed || 0) + 1;
   saveUserData(currentUser, currentUserData);
