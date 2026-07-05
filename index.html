@@ -1146,16 +1146,6 @@ let speechRetryCount = 0;
 let speechUtteranceTimeout = null;
 
 function speakWord(text, retry = false) {
-  if (!speechSupported) {
-    showSpeechStatus('❌ 浏览器不支持语音合成', 'error');
-    return;
-  }
-  
-  if (!speechReady) {
-    speechVoices = speechSynthesis.getVoices();
-    speechReady = true;
-  }
-  
   if (speechDebounce && !retry) {
     return;
   }
@@ -1166,8 +1156,70 @@ function speakWord(text, retry = false) {
     setTimeout(() => { speechDebounce = false; }, 800);
   }
   
+  playAudio(text);
+}
+
+function playAudio(text) {
   if (speechUtteranceTimeout) {
     clearTimeout(speechUtteranceTimeout);
+  }
+  
+  const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q=${encodeURIComponent(text)}&tl=en`;
+  const audio = new Audio(audioUrl);
+  
+  audio.onloadeddata = () => {
+    console.log('Audio loaded:', text);
+  };
+  
+  audio.onplaying = () => {
+    console.log('Audio playing:', text);
+    speechUtteranceTimeout = setTimeout(() => {
+      console.warn('Audio timeout');
+      showSpeechStatus('⚠️ 音频播放超时', 'info');
+    }, 5000);
+  };
+  
+  audio.onended = () => {
+    console.log('Audio ended:', text);
+    if (speechUtteranceTimeout) {
+      clearTimeout(speechUtteranceTimeout);
+    }
+    speechRetryCount = 0;
+  };
+  
+  audio.onerror = (e) => {
+    console.error('Audio error:', e);
+    if (speechUtteranceTimeout) {
+      clearTimeout(speechUtteranceTimeout);
+    }
+    
+    if (speechRetryCount < 2) {
+      speechRetryCount++;
+      setTimeout(() => {
+        playAudio(text);
+      }, 300);
+      return;
+    }
+    
+    console.log('Falling back to speech synthesis');
+    fallbackToSpeechSynthesis(text);
+  };
+  
+  audio.play().catch(err => {
+    console.error('Audio play failed:', err);
+    fallbackToSpeechSynthesis(text);
+  });
+}
+
+function fallbackToSpeechSynthesis(text) {
+  if (!speechSupported) {
+    showSpeechStatus('❌ 无法播放音频且浏览器不支持语音合成', 'error');
+    return;
+  }
+  
+  if (!speechReady) {
+    speechVoices = speechSynthesis.getVoices();
+    speechReady = true;
   }
   
   const utterance = new SpeechSynthesisUtterance(text);
@@ -1182,49 +1234,20 @@ function speakWord(text, retry = false) {
   
   if (enVoice) {
     utterance.voice = enVoice;
-    console.log('Using voice:', enVoice.name, enVoice.lang);
-  } else {
-    console.log('No English voice found, using default');
+    console.log('Using voice fallback:', enVoice.name, enVoice.lang);
   }
   
   utterance.onstart = () => {
-    console.log('Speech started:', text);
-    speechUtteranceTimeout = setTimeout(() => {
-      console.warn('Speech timeout: no sound detected');
-      showSpeechStatus('⚠️ 语音超时，可能被静音或浏览器限制', 'info');
-    }, 3000);
+    console.log('Fallback speech started:', text);
   };
   
   utterance.onend = () => {
-    console.log('Speech ended:', text);
-    if (speechUtteranceTimeout) {
-      clearTimeout(speechUtteranceTimeout);
-    }
-    speechRetryCount = 0;
+    console.log('Fallback speech ended:', text);
   };
   
   utterance.onerror = (e) => {
-    console.error('Speech error:', e);
-    if (speechUtteranceTimeout) {
-      clearTimeout(speechUtteranceTimeout);
-    }
-    const errorMsg = e.error || 'unknown';
-    
-    if (errorMsg === 'interrupted' && speechRetryCount < 2) {
-      speechRetryCount++;
-      setTimeout(() => {
-        speakWord(text, true);
-      }, 200);
-      return;
-    }
-    
-    if (errorMsg === 'not-allowed') {
-      showSpeechStatus('⚠️ 语音权限被阻止，请点击页面后重试', 'error');
-    } else if (errorMsg === 'interrupted') {
-      showSpeechStatus('⚠️ 发音被中断，请点击卡片重试', 'info');
-    } else {
-      showSpeechStatus('❌ 发音失败: ' + errorMsg, 'error');
-    }
+    console.error('Fallback speech error:', e);
+    showSpeechStatus('❌ 发音失败', 'error');
   };
   
   speechSynthesis.speak(utterance);
