@@ -11,7 +11,7 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 with open(INDEX_HTML, 'r', encoding='utf-8') as f:
     content = f.read()
 
-word_pattern = r'\{en:\'([^\']+)\',cn:\'([^\']+)\'\}'
+word_pattern = r'\{en:\'([^\']+)\',cn:\'([^\']+)\''
 matches = re.findall(word_pattern, content)
 
 unique_words = {}

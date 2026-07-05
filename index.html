@@ -75,8 +75,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .word-cn{font-size:1.1em;color:var(--text-light);margin-top:6px;z-index:2;position:relative;font-weight:500}
 .card-damage{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3;border-radius:20px;overflow:hidden}
 .card-damage-hole{position:absolute;background:var(--bg);border-radius:50%}
-.animal{position:absolute;z-index:6;pointer-events:none;display:inline-block;width:40px;height:40px}
-.animal-inner{width:100%;height:100%;font-size:2.2em;filter:drop-shadow(2px 2px 2px rgba(0,0,0,0.15));line-height:40px;text-align:center;transition:transform 0.15s linear}
+.animal{position:absolute;z-index:6;pointer-events:none;display:inline-block;width:48px;height:48px}
+.animal-inner{width:100%;height:100%;font-size:2.2em;filter:drop-shadow(2px 2px 2px rgba(0,0,0,0.15));line-height:48px;text-align:center;transition:transform 0.15s linear}
 .animal-inner.animal-img{width:48px;height:48px;line-height:48px}
 .animal-inner img{width:100%;height:100%;object-fit:contain;display:block}
 .animal.eating .animal-inner{animation:nomNom .3s ease infinite}
@@ -1330,8 +1330,11 @@ document.addEventListener('click', function primeSpeech() {
 // ==================== ANIMALS ====================
 const ANIMAL_TYPES = [
   { emoji: '🐜', img: 'png/ant.png', name: 'ant', speed: 1.2, rotationOffset: 90 },
-  { emoji: '🐝', name: 'bee', speed: 1.5, rotationOffset: 180 },
-  { emoji: '🪲', name: 'beetle', speed: 0.9, rotationOffset: 90 }
+  { emoji: '🐝', img: 'png/bee.png', name: 'bee', speed: 1.5, rotationOffset: 180 },
+  { emoji: '🪲', img: 'png/bug1.png', name: 'bug1', speed: 1.0, rotationOffset: 0 },
+  { emoji: '🪲', img: 'png/bug2.png', name: 'bug2', speed: 1.1, rotationOffset: 0 },
+  { emoji: '🪲', img: 'png/bug3.png', name: 'bug3', speed: 0.9, rotationOffset: 0 },
+  { emoji: '🪲', img: 'png/bug4.png', name: 'bug4', speed: 1.3, rotationOffset: 0 }
 ];
 
 function spawnAnimals() {
@@ -1370,10 +1373,10 @@ function spawnAnimals() {
     const stageRect = stage.getBoundingClientRect();
     let x, y;
     switch(edge) {
-      case 0: x = Math.random() * (stageRect.width - 40); y = -20; break; // top
-      case 1: x = stageRect.width + 10; y = Math.random() * (stageRect.height - 40); break; // right
-      case 2: x = Math.random() * (stageRect.width - 40); y = stageRect.height + 10; break; // bottom
-      case 3: x = -30; y = Math.random() * (stageRect.height - 40); break; // left
+      case 0: x = Math.random() * (stageRect.width - 48); y = -24; break; // top
+      case 1: x = stageRect.width + 12; y = Math.random() * (stageRect.height - 48); break; // right
+      case 2: x = Math.random() * (stageRect.width - 48); y = stageRect.height + 12; break; // bottom
+      case 3: x = -36; y = Math.random() * (stageRect.height - 48); break; // left
     }
     
     el.style.left = x + 'px';
