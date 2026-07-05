@@ -760,6 +760,13 @@ document.getElementById('btn-logout').addEventListener('click', () => {
 document.getElementById('btn-speak-test').addEventListener('click', () => {
   const diag = getSpeechDiagnostic();
   
+  console.log('=== Speech Diagnostic ===');
+  console.log('Supported:', diag.supported);
+  console.log('Voices loaded:', diag.voicesLoaded);
+  console.log('Total voices:', diag.voiceCount);
+  console.log('English voices:', diag.englishVoices);
+  console.log('Available voices:', diag.availableVoices);
+  
   if (!diag.supported) {
     showSpeechStatus('❌ 浏览器不支持语音合成 API', 'error');
     return;
@@ -1119,7 +1126,8 @@ function getSpeechDiagnostic() {
     supported: speechSupported,
     voicesLoaded: speechReady,
     voiceCount: speechVoices.length,
-    englishVoices: speechVoices.filter(v => v.lang.startsWith('en')).length
+    englishVoices: speechVoices.filter(v => v.lang.startsWith('en')).length,
+    availableVoices: speechVoices.map(v => ({ name: v.name, lang: v.lang, local: v.localService }))
   };
   return result;
 }
@@ -1135,6 +1143,7 @@ function showSpeechStatus(msg, type = 'info') {
 
 let speechDebounce = false;
 let speechRetryCount = 0;
+let speechUtteranceTimeout = null;
 
 function speakWord(text, retry = false) {
   if (!speechSupported) {
@@ -1157,6 +1166,10 @@ function speakWord(text, retry = false) {
     setTimeout(() => { speechDebounce = false; }, 800);
   }
   
+  if (speechUtteranceTimeout) {
+    clearTimeout(speechUtteranceTimeout);
+  }
+  
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-US';
   utterance.rate = 0.85;
@@ -1166,12 +1179,35 @@ function speakWord(text, retry = false) {
   const enVoice = speechVoices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
     || speechVoices.find(v => v.lang.startsWith('en-US'))
     || speechVoices.find(v => v.lang.startsWith('en'));
+  
   if (enVoice) {
     utterance.voice = enVoice;
+    console.log('Using voice:', enVoice.name, enVoice.lang);
+  } else {
+    console.log('No English voice found, using default');
   }
+  
+  utterance.onstart = () => {
+    console.log('Speech started:', text);
+    speechUtteranceTimeout = setTimeout(() => {
+      console.warn('Speech timeout: no sound detected');
+      showSpeechStatus('⚠️ 语音超时，可能被静音或浏览器限制', 'info');
+    }, 3000);
+  };
+  
+  utterance.onend = () => {
+    console.log('Speech ended:', text);
+    if (speechUtteranceTimeout) {
+      clearTimeout(speechUtteranceTimeout);
+    }
+    speechRetryCount = 0;
+  };
   
   utterance.onerror = (e) => {
     console.error('Speech error:', e);
+    if (speechUtteranceTimeout) {
+      clearTimeout(speechUtteranceTimeout);
+    }
     const errorMsg = e.error || 'unknown';
     
     if (errorMsg === 'interrupted' && speechRetryCount < 2) {
@@ -1191,10 +1227,6 @@ function speakWord(text, retry = false) {
     }
   };
   
-  utterance.onend = () => {
-    speechRetryCount = 0;
-  };
-  
   speechSynthesis.speak(utterance);
 }
 
@@ -1203,9 +1235,19 @@ let speechPrimed = false;
 document.addEventListener('click', function primeSpeech() {
   if (speechPrimed || !('speechSynthesis' in window)) return;
   speechPrimed = true;
-  const u = new SpeechSynthesisUtterance('');
+  console.log('Priming speech synthesis...');
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(' ');
   u.volume = 0;
-  u.rate = 2;
+  u.rate = 1;
+  u.onend = () => {
+    console.log('Speech primed successfully');
+    speechReady = true;
+    speechVoices = speechSynthesis.getVoices();
+  };
+  u.onerror = () => {
+    console.log('Speech priming failed');
+  };
   speechSynthesis.speak(u);
 }, { once: false });
 
