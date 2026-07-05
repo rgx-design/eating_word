@@ -262,103 +262,103 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 // ==================== WORD BANKS ====================
 const WORD_BANKS = {
   verbs: { name: '动词词库', icon: '🏃', words: [
-    {en:'run',cn:'跑'},{en:'eat',cn:'吃'},{en:'sleep',cn:'睡觉'},{en:'walk',cn:'走'},{en:'jump',cn:'跳'},
-    {en:'swim',cn:'游泳'},{en:'fly',cn:'飞'},{en:'read',cn:'阅读'},{en:'write',cn:'写'},{en:'sing',cn:'唱歌'},
-    {en:'dance',cn:'跳舞'},{en:'drink',cn:'喝'},{en:'cook',cn:'烹饪'},{en:'draw',cn:'画画'},{en:'climb',cn:'爬'},
-    {en:'drive',cn:'驾驶'},{en:'smile',cn:'微笑'},{en:'cry',cn:'哭'},{en:'think',cn:'思考'},{en:'speak',cn:'说话'},
-    {en:'listen',cn:'听'},{en:'open',cn:'打开'},{en:'close',cn:'关闭'},{en:'push',cn:'推'},{en:'pull',cn:'拉'},
-    {en:'throw',cn:'扔'},{en:'catch',cn:'接住'},{en:'build',cn:'建造'},{en:'clean',cn:'打扫'},{en:'wash',cn:'洗'},
-    {en:'buy',cn:'买'},{en:'sell',cn:'卖'},{en:'give',cn:'给'},{en:'take',cn:'拿'},{en:'make',cn:'制作'},
-    {en:'break',cn:'打破'},{en:'cut',cn:'切'},{en:'hit',cn:'打'},{en:'hold',cn:'握住'},{en:'kick',cn:'踢'},
-    {en:'kiss',cn:'亲吻'},{en:'laugh',cn:'笑'},{en:'learn',cn:'学习'},{en:'teach',cn:'教'},{en:'play',cn:'玩'},
-    {en:'ride',cn:'骑'},{en:'sit',cn:'坐'},{en:'stand',cn:'站'},{en:'stop',cn:'停止'},{en:'turn',cn:'转'},
-    {en:'wait',cn:'等待'},{en:'win',cn:'赢'},{en:'lose',cn:'输'},{en:'begin',cn:'开始'},{en:'finish',cn:'完成'},
-    {en:'help',cn:'帮助'},{en:'like',cn:'喜欢'},{en:'love',cn:'爱'},{en:'hate',cn:'恨'},{en:'want',cn:'想要'},
-    {en:'carry',cn:'搬运'},{en:'count',cn:'数数'},{en:'dig',cn:'挖'},{en:'drop',cn:'掉落'},{en:'fall',cn:'跌倒'},
-    {en:'fight',cn:'打架'},{en:'find',cn:'找到'},{en:'fix',cn:'修理'},{en:'follow',cn:'跟随'},{en:'forget',cn:'忘记'},
-    {en:'grow',cn:'生长'},{en:'hang',cn:'悬挂'},{en:'hide',cn:'躲藏'},{en:'hope',cn:'希望'},{en:'hurry',cn:'赶快'},
-    {en:'invite',cn:'邀请'},{en:'keep',cn:'保持'},{en:'lead',cn:'带领'},{en:'leave',cn:'离开'},{en:'lie',cn:'躺'},
-    {en:'lift',cn:'举起'},{en:'meet',cn:'遇见'},{en:'miss',cn:'想念'},{en:'move',cn:'移动'},{en:'need',cn:'需要'},
-    {en:'paint',cn:'涂画'},{en:'pass',cn:'通过'},{en:'pick',cn:'捡起'},{en:'plan',cn:'计划'},{en:'point',cn:'指向'},
-    {en:'promise',cn:'承诺'},{en:'protect',cn:'保护'},{en:'reach',cn:'到达'},{en:'remember',cn:'记住'},{en:'repeat',cn:'重复'},
-    {en:'rest',cn:'休息'},{en:'return',cn:'返回'},{en:'save',cn:'保存'},{en:'search',cn:'搜索'},{en:'send',cn:'发送'},
-    {en:'shake',cn:'摇晃'},{en:'share',cn:'分享'},{en:'shout',cn:'喊叫'},{en:'show',cn:'展示'},{en:'stay',cn:'停留'},
-    {en:'study',cn:'学习'},{en:'talk',cn:'交谈'},{en:'tell',cn:'告诉'},{en:'travel',cn:'旅行'},{en:'try',cn:'尝试'},
-    {en:'use',cn:'使用'},{en:'visit',cn:'拜访'},{en:'watch',cn:'观看'},{en:'wear',cn:'穿'},{en:'work',cn:'工作'},
-    {en:'worry',cn:'担心'},{en:'bring',cn:'带来'},{en:'choose',cn:'选择'},{en:'feel',cn:'感觉'},{en:'fill',cn:'填满'},
-    {en:'happen',cn:'发生'},{en:'imagine',cn:'想象'},{en:'improve',cn:'改善'},{en:'include',cn:'包括'},{en:'increase',cn:'增加'},
-    {en:'explain',cn:'解释'},{en:'express',cn:'表达'}
+    {en:'run',cn:'跑',audio:'audio/run.mp3'},{en:'eat',cn:'吃',audio:'audio/eat.mp3'},{en:'sleep',cn:'睡觉',audio:'audio/sleep.mp3'},{en:'walk',cn:'走',audio:'audio/walk.mp3'},{en:'jump',cn:'跳',audio:'audio/jump.mp3'},
+    {en:'swim',cn:'游泳',audio:'audio/swim.mp3'},{en:'fly',cn:'飞',audio:'audio/fly.mp3'},{en:'read',cn:'阅读',audio:'audio/read.mp3'},{en:'write',cn:'写',audio:'audio/write.mp3'},{en:'sing',cn:'唱歌',audio:'audio/sing.mp3'},
+    {en:'dance',cn:'跳舞',audio:'audio/dance.mp3'},{en:'drink',cn:'喝',audio:'audio/drink.mp3'},{en:'cook',cn:'烹饪',audio:'audio/cook.mp3'},{en:'draw',cn:'画画',audio:'audio/draw.mp3'},{en:'climb',cn:'爬',audio:'audio/climb.mp3'},
+    {en:'drive',cn:'驾驶',audio:'audio/drive.mp3'},{en:'smile',cn:'微笑',audio:'audio/smile.mp3'},{en:'cry',cn:'哭',audio:'audio/cry.mp3'},{en:'think',cn:'思考',audio:'audio/think.mp3'},{en:'speak',cn:'说话',audio:'audio/speak.mp3'},
+    {en:'listen',cn:'听',audio:'audio/listen.mp3'},{en:'open',cn:'打开',audio:'audio/open.mp3'},{en:'close',cn:'关闭',audio:'audio/close.mp3'},{en:'push',cn:'推',audio:'audio/push.mp3'},{en:'pull',cn:'拉',audio:'audio/pull.mp3'},
+    {en:'throw',cn:'扔',audio:'audio/throw.mp3'},{en:'catch',cn:'接住',audio:'audio/catch.mp3'},{en:'build',cn:'建造',audio:'audio/build.mp3'},{en:'clean',cn:'打扫',audio:'audio/clean.mp3'},{en:'wash',cn:'洗',audio:'audio/wash.mp3'},
+    {en:'buy',cn:'买',audio:'audio/buy.mp3'},{en:'sell',cn:'卖',audio:'audio/sell.mp3'},{en:'give',cn:'给',audio:'audio/give.mp3'},{en:'take',cn:'拿',audio:'audio/take.mp3'},{en:'make',cn:'制作',audio:'audio/make.mp3'},
+    {en:'break',cn:'打破',audio:'audio/break.mp3'},{en:'cut',cn:'切',audio:'audio/cut.mp3'},{en:'hit',cn:'打',audio:'audio/hit.mp3'},{en:'hold',cn:'握住',audio:'audio/hold.mp3'},{en:'kick',cn:'踢',audio:'audio/kick.mp3'},
+    {en:'kiss',cn:'亲吻',audio:'audio/kiss.mp3'},{en:'laugh',cn:'笑',audio:'audio/laugh.mp3'},{en:'learn',cn:'学习',audio:'audio/learn.mp3'},{en:'teach',cn:'教',audio:'audio/teach.mp3'},{en:'play',cn:'玩',audio:'audio/play.mp3'},
+    {en:'ride',cn:'骑',audio:'audio/ride.mp3'},{en:'sit',cn:'坐',audio:'audio/sit.mp3'},{en:'stand',cn:'站',audio:'audio/stand.mp3'},{en:'stop',cn:'停止',audio:'audio/stop.mp3'},{en:'turn',cn:'转',audio:'audio/turn.mp3'},
+    {en:'wait',cn:'等待',audio:'audio/wait.mp3'},{en:'win',cn:'赢',audio:'audio/win.mp3'},{en:'lose',cn:'输',audio:'audio/lose.mp3'},{en:'begin',cn:'开始',audio:'audio/begin.mp3'},{en:'finish',cn:'完成',audio:'audio/finish.mp3'},
+    {en:'help',cn:'帮助',audio:'audio/help.mp3'},{en:'like',cn:'喜欢',audio:'audio/like.mp3'},{en:'love',cn:'爱',audio:'audio/love.mp3'},{en:'hate',cn:'恨',audio:'audio/hate.mp3'},{en:'want',cn:'想要',audio:'audio/want.mp3'},
+    {en:'carry',cn:'搬运',audio:'audio/carry.mp3'},{en:'count',cn:'数数',audio:'audio/count.mp3'},{en:'dig',cn:'挖',audio:'audio/dig.mp3'},{en:'drop',cn:'掉落',audio:'audio/drop.mp3'},{en:'fall',cn:'跌倒',audio:'audio/fall.mp3'},
+    {en:'fight',cn:'打架',audio:'audio/fight.mp3'},{en:'find',cn:'找到',audio:'audio/find.mp3'},{en:'fix',cn:'修理',audio:'audio/fix.mp3'},{en:'follow',cn:'跟随',audio:'audio/follow.mp3'},{en:'forget',cn:'忘记',audio:'audio/forget.mp3'},
+    {en:'grow',cn:'生长',audio:'audio/grow.mp3'},{en:'hang',cn:'悬挂',audio:'audio/hang.mp3'},{en:'hide',cn:'躲藏',audio:'audio/hide.mp3'},{en:'hope',cn:'希望',audio:'audio/hope.mp3'},{en:'hurry',cn:'赶快',audio:'audio/hurry.mp3'},
+    {en:'invite',cn:'邀请',audio:'audio/invite.mp3'},{en:'keep',cn:'保持',audio:'audio/keep.mp3'},{en:'lead',cn:'带领',audio:'audio/lead.mp3'},{en:'leave',cn:'离开',audio:'audio/leave.mp3'},{en:'lie',cn:'躺',audio:'audio/lie.mp3'},
+    {en:'lift',cn:'举起',audio:'audio/lift.mp3'},{en:'meet',cn:'遇见',audio:'audio/meet.mp3'},{en:'miss',cn:'想念',audio:'audio/miss.mp3'},{en:'move',cn:'移动',audio:'audio/move.mp3'},{en:'need',cn:'需要',audio:'audio/need.mp3'},
+    {en:'paint',cn:'涂画',audio:'audio/paint.mp3'},{en:'pass',cn:'通过',audio:'audio/pass.mp3'},{en:'pick',cn:'捡起',audio:'audio/pick.mp3'},{en:'plan',cn:'计划',audio:'audio/plan.mp3'},{en:'point',cn:'指向',audio:'audio/point.mp3'},
+    {en:'promise',cn:'承诺',audio:'audio/promise.mp3'},{en:'protect',cn:'保护',audio:'audio/protect.mp3'},{en:'reach',cn:'到达',audio:'audio/reach.mp3'},{en:'remember',cn:'记住',audio:'audio/remember.mp3'},{en:'repeat',cn:'重复',audio:'audio/repeat.mp3'},
+    {en:'rest',cn:'休息',audio:'audio/rest.mp3'},{en:'return',cn:'返回',audio:'audio/return.mp3'},{en:'save',cn:'保存',audio:'audio/save.mp3'},{en:'search',cn:'搜索',audio:'audio/search.mp3'},{en:'send',cn:'发送',audio:'audio/send.mp3'},
+    {en:'shake',cn:'摇晃',audio:'audio/shake.mp3'},{en:'share',cn:'分享',audio:'audio/share.mp3'},{en:'shout',cn:'喊叫',audio:'audio/shout.mp3'},{en:'show',cn:'展示',audio:'audio/show.mp3'},{en:'stay',cn:'停留',audio:'audio/stay.mp3'},
+    {en:'study',cn:'学习',audio:'audio/study.mp3'},{en:'talk',cn:'交谈',audio:'audio/talk.mp3'},{en:'tell',cn:'告诉',audio:'audio/tell.mp3'},{en:'travel',cn:'旅行',audio:'audio/travel.mp3'},{en:'try',cn:'尝试',audio:'audio/try.mp3'},
+    {en:'use',cn:'使用',audio:'audio/use.mp3'},{en:'visit',cn:'拜访',audio:'audio/visit.mp3'},{en:'watch',cn:'观看',audio:'audio/watch.mp3'},{en:'wear',cn:'穿',audio:'audio/wear.mp3'},{en:'work',cn:'工作',audio:'audio/work.mp3'},
+    {en:'worry',cn:'担心',audio:'audio/worry.mp3'},{en:'bring',cn:'带来',audio:'audio/bring.mp3'},{en:'choose',cn:'选择',audio:'audio/choose.mp3'},{en:'feel',cn:'感觉',audio:'audio/feel.mp3'},{en:'fill',cn:'填满',audio:'audio/fill.mp3'},
+    {en:'happen',cn:'发生',audio:'audio/happen.mp3'},{en:'imagine',cn:'想象',audio:'audio/imagine.mp3'},{en:'improve',cn:'改善',audio:'audio/improve.mp3'},{en:'include',cn:'包括',audio:'audio/include.mp3'},{en:'increase',cn:'增加',audio:'audio/increase.mp3'},
+    {en:'explain',cn:'解释',audio:'audio/explain.mp3'},{en:'express',cn:'表达',audio:'audio/express.mp3'}
   ]},
   elementary: { name: '小学词汇', icon: '🎒', words: [
-    {en:'apple',cn:'苹果'},{en:'book',cn:'书'},{en:'cat',cn:'猫'},{en:'dog',cn:'狗'},{en:'egg',cn:'鸡蛋'},
-    {en:'fish',cn:'鱼'},{en:'girl',cn:'女孩'},{en:'house',cn:'房子'},{en:'ice',cn:'冰'},{en:'juice',cn:'果汁'},
-    {en:'king',cn:'国王'},{en:'lion',cn:'狮子'},{en:'milk',cn:'牛奶'},{en:'nose',cn:'鼻子'},{en:'orange',cn:'橙子'},
-    {en:'pen',cn:'钢笔'},{en:'queen',cn:'女王'},{en:'rain',cn:'雨'},{en:'sun',cn:'太阳'},{en:'tree',cn:'树'},
-    {en:'umbrella',cn:'雨伞'},{en:'van',cn:'面包车'},{en:'water',cn:'水'},{en:'box',cn:'盒子'},{en:'yellow',cn:'黄色'},
-    {en:'zoo',cn:'动物园'},{en:'bird',cn:'鸟'},{en:'cake',cn:'蛋糕'},{en:'door',cn:'门'},{en:'ear',cn:'耳朵'},
-    {en:'foot',cn:'脚'},{en:'goat',cn:'山羊'},{en:'hand',cn:'手'},{en:'ink',cn:'墨水'},{en:'jam',cn:'果酱'},
-    {en:'kite',cn:'风筝'},{en:'leg',cn:'腿'},{en:'moon',cn:'月亮'},{en:'nest',cn:'鸟巢'},{en:'oil',cn:'油'},
-    {en:'pig',cn:'猪'},{en:'rice',cn:'米饭'},{en:'star',cn:'星星'},{en:'toy',cn:'玩具'},{en:'cup',cn:'杯子'},
-    {en:'wall',cn:'墙'},{en:'snow',cn:'雪'},{en:'bear',cn:'熊'},{en:'baby',cn:'宝宝'},{en:'ball',cn:'球'},
-    {en:'boat',cn:'船'},{en:'chair',cn:'椅子'},{en:'clock',cn:'时钟'},{en:'cloud',cn:'云'},{en:'coat',cn:'外套'},
-    {en:'cow',cn:'奶牛'},{en:'desk',cn:'书桌'},{en:'duck',cn:'鸭子'},{en:'eye',cn:'眼睛'},{en:'face',cn:'脸'},
-    {en:'farm',cn:'农场'},{en:'fire',cn:'火'},{en:'flag',cn:'旗子'},{en:'flower',cn:'花'},{en:'food',cn:'食物'},
-    {en:'frog',cn:'青蛙'},{en:'game',cn:'游戏'},{en:'garden',cn:'花园'},{en:'gift',cn:'礼物'},{en:'grass',cn:'草'},
-    {en:'hat',cn:'帽子'},{en:'head',cn:'头'},{en:'hill',cn:'小山'},{en:'horse',cn:'马'},{en:'key',cn:'钥匙'},
-    {en:'lake',cn:'湖'},{en:'lamp',cn:'灯'},{en:'leaf',cn:'叶子'},{en:'map',cn:'地图'},{en:'monkey',cn:'猴子'},
-    {en:'mouth',cn:'嘴巴'},{en:'name',cn:'名字'},{en:'night',cn:'夜晚'},{en:'park',cn:'公园'},{en:'plane',cn:'飞机'},
-    {en:'rabbit',cn:'兔子'},{en:'ring',cn:'戒指'},{en:'river',cn:'河流'},{en:'road',cn:'路'},{en:'room',cn:'房间'},
-    {en:'school',cn:'学校'},{en:'sheep',cn:'绵羊'},{en:'ship',cn:'船'},{en:'shoe',cn:'鞋子'},{en:'sky',cn:'天空'},
-    {en:'snake',cn:'蛇'},{en:'sock',cn:'袜子'},{en:'street',cn:'街道'},{en:'table',cn:'桌子'},{en:'tiger',cn:'老虎'},
-    {en:'town',cn:'城镇'},{en:'train',cn:'火车'},{en:'wind',cn:'风'},{en:'window',cn:'窗户'},{en:'wood',cn:'木头'},
-    {en:'bed',cn:'床'},{en:'bread',cn:'面包'},{en:'bridge',cn:'桥'},{en:'brush',cn:'刷子'},{en:'card',cn:'卡片'},
-    {en:'cheese',cn:'奶酪'},{en:'chicken',cn:'鸡'},{en:'dress',cn:'连衣裙'},{en:'drum',cn:'鼓'},{en:'family',cn:'家庭'}
+    {en:'apple',cn:'苹果',audio:'audio/apple.mp3'},{en:'book',cn:'书',audio:'audio/book.mp3'},{en:'cat',cn:'猫',audio:'audio/cat.mp3'},{en:'dog',cn:'狗',audio:'audio/dog.mp3'},{en:'egg',cn:'鸡蛋',audio:'audio/egg.mp3'},
+    {en:'fish',cn:'鱼',audio:'audio/fish.mp3'},{en:'girl',cn:'女孩',audio:'audio/girl.mp3'},{en:'house',cn:'房子',audio:'audio/house.mp3'},{en:'ice',cn:'冰',audio:'audio/ice.mp3'},{en:'juice',cn:'果汁',audio:'audio/juice.mp3'},
+    {en:'king',cn:'国王',audio:'audio/king.mp3'},{en:'lion',cn:'狮子',audio:'audio/lion.mp3'},{en:'milk',cn:'牛奶',audio:'audio/milk.mp3'},{en:'nose',cn:'鼻子',audio:'audio/nose.mp3'},{en:'orange',cn:'橙子',audio:'audio/orange.mp3'},
+    {en:'pen',cn:'钢笔',audio:'audio/pen.mp3'},{en:'queen',cn:'女王',audio:'audio/queen.mp3'},{en:'rain',cn:'雨',audio:'audio/rain.mp3'},{en:'sun',cn:'太阳',audio:'audio/sun.mp3'},{en:'tree',cn:'树',audio:'audio/tree.mp3'},
+    {en:'umbrella',cn:'雨伞',audio:'audio/umbrella.mp3'},{en:'van',cn:'面包车',audio:'audio/van.mp3'},{en:'water',cn:'水',audio:'audio/water.mp3'},{en:'box',cn:'盒子',audio:'audio/box.mp3'},{en:'yellow',cn:'黄色',audio:'audio/yellow.mp3'},
+    {en:'zoo',cn:'动物园',audio:'audio/zoo.mp3'},{en:'bird',cn:'鸟',audio:'audio/bird.mp3'},{en:'cake',cn:'蛋糕',audio:'audio/cake.mp3'},{en:'door',cn:'门',audio:'audio/door.mp3'},{en:'ear',cn:'耳朵',audio:'audio/ear.mp3'},
+    {en:'foot',cn:'脚',audio:'audio/foot.mp3'},{en:'goat',cn:'山羊',audio:'audio/goat.mp3'},{en:'hand',cn:'手',audio:'audio/hand.mp3'},{en:'ink',cn:'墨水',audio:'audio/ink.mp3'},{en:'jam',cn:'果酱',audio:'audio/jam.mp3'},
+    {en:'kite',cn:'风筝',audio:'audio/kite.mp3'},{en:'leg',cn:'腿',audio:'audio/leg.mp3'},{en:'moon',cn:'月亮',audio:'audio/moon.mp3'},{en:'nest',cn:'鸟巢',audio:'audio/nest.mp3'},{en:'oil',cn:'油',audio:'audio/oil.mp3'},
+    {en:'pig',cn:'猪',audio:'audio/pig.mp3'},{en:'rice',cn:'米饭',audio:'audio/rice.mp3'},{en:'star',cn:'星星',audio:'audio/star.mp3'},{en:'toy',cn:'玩具',audio:'audio/toy.mp3'},{en:'cup',cn:'杯子',audio:'audio/cup.mp3'},
+    {en:'wall',cn:'墙',audio:'audio/wall.mp3'},{en:'snow',cn:'雪',audio:'audio/snow.mp3'},{en:'bear',cn:'熊',audio:'audio/bear.mp3'},{en:'baby',cn:'宝宝',audio:'audio/baby.mp3'},{en:'ball',cn:'球',audio:'audio/ball.mp3'},
+    {en:'boat',cn:'船',audio:'audio/boat.mp3'},{en:'chair',cn:'椅子',audio:'audio/chair.mp3'},{en:'clock',cn:'时钟',audio:'audio/clock.mp3'},{en:'cloud',cn:'云',audio:'audio/cloud.mp3'},{en:'coat',cn:'外套',audio:'audio/coat.mp3'},
+    {en:'cow',cn:'奶牛',audio:'audio/cow.mp3'},{en:'desk',cn:'书桌',audio:'audio/desk.mp3'},{en:'duck',cn:'鸭子',audio:'audio/duck.mp3'},{en:'eye',cn:'眼睛',audio:'audio/eye.mp3'},{en:'face',cn:'脸',audio:'audio/face.mp3'},
+    {en:'farm',cn:'农场',audio:'audio/farm.mp3'},{en:'fire',cn:'火',audio:'audio/fire.mp3'},{en:'flag',cn:'旗子',audio:'audio/flag.mp3'},{en:'flower',cn:'花',audio:'audio/flower.mp3'},{en:'food',cn:'食物',audio:'audio/food.mp3'},
+    {en:'frog',cn:'青蛙',audio:'audio/frog.mp3'},{en:'game',cn:'游戏',audio:'audio/game.mp3'},{en:'garden',cn:'花园',audio:'audio/garden.mp3'},{en:'gift',cn:'礼物',audio:'audio/gift.mp3'},{en:'grass',cn:'草',audio:'audio/grass.mp3'},
+    {en:'hat',cn:'帽子',audio:'audio/hat.mp3'},{en:'head',cn:'头',audio:'audio/head.mp3'},{en:'hill',cn:'小山',audio:'audio/hill.mp3'},{en:'horse',cn:'马',audio:'audio/horse.mp3'},{en:'key',cn:'钥匙',audio:'audio/key.mp3'},
+    {en:'lake',cn:'湖',audio:'audio/lake.mp3'},{en:'lamp',cn:'灯',audio:'audio/lamp.mp3'},{en:'leaf',cn:'叶子',audio:'audio/leaf.mp3'},{en:'map',cn:'地图',audio:'audio/map.mp3'},{en:'monkey',cn:'猴子',audio:'audio/monkey.mp3'},
+    {en:'mouth',cn:'嘴巴',audio:'audio/mouth.mp3'},{en:'name',cn:'名字',audio:'audio/name.mp3'},{en:'night',cn:'夜晚',audio:'audio/night.mp3'},{en:'park',cn:'公园',audio:'audio/park.mp3'},{en:'plane',cn:'飞机',audio:'audio/plane.mp3'},
+    {en:'rabbit',cn:'兔子',audio:'audio/rabbit.mp3'},{en:'ring',cn:'戒指',audio:'audio/ring.mp3'},{en:'river',cn:'河流',audio:'audio/river.mp3'},{en:'road',cn:'路',audio:'audio/road.mp3'},{en:'room',cn:'房间',audio:'audio/room.mp3'},
+    {en:'school',cn:'学校',audio:'audio/school.mp3'},{en:'sheep',cn:'绵羊',audio:'audio/sheep.mp3'},{en:'ship',cn:'船',audio:'audio/ship.mp3'},{en:'shoe',cn:'鞋子',audio:'audio/shoe.mp3'},{en:'sky',cn:'天空',audio:'audio/sky.mp3'},
+    {en:'snake',cn:'蛇',audio:'audio/snake.mp3'},{en:'sock',cn:'袜子',audio:'audio/sock.mp3'},{en:'street',cn:'街道',audio:'audio/street.mp3'},{en:'table',cn:'桌子',audio:'audio/table.mp3'},{en:'tiger',cn:'老虎',audio:'audio/tiger.mp3'},
+    {en:'town',cn:'城镇',audio:'audio/town.mp3'},{en:'train',cn:'火车',audio:'audio/train.mp3'},{en:'wind',cn:'风',audio:'audio/wind.mp3'},{en:'window',cn:'窗户',audio:'audio/window.mp3'},{en:'wood',cn:'木头',audio:'audio/wood.mp3'},
+    {en:'bed',cn:'床',audio:'audio/bed.mp3'},{en:'bread',cn:'面包',audio:'audio/bread.mp3'},{en:'bridge',cn:'桥',audio:'audio/bridge.mp3'},{en:'brush',cn:'刷子',audio:'audio/brush.mp3'},{en:'card',cn:'卡片',audio:'audio/card.mp3'},
+    {en:'cheese',cn:'奶酪',audio:'audio/cheese.mp3'},{en:'chicken',cn:'鸡',audio:'audio/chicken.mp3'},{en:'dress',cn:'连衣裙',audio:'audio/dress.mp3'},{en:'drum',cn:'鼓',audio:'audio/drum.mp3'},{en:'family',cn:'家庭',audio:'audio/family.mp3'}
   ]},
   middle: { name: '中学词汇', icon: '📖', words: [
-    {en:'ability',cn:'能力'},{en:'abroad',cn:'国外'},{en:'accept',cn:'接受'},{en:'accident',cn:'事故'},{en:'achieve',cn:'实现'},
-    {en:'active',cn:'活跃的'},{en:'actual',cn:'实际的'},{en:'admire',cn:'钦佩'},{en:'admit',cn:'承认'},{en:'advice',cn:'建议'},
-    {en:'afford',cn:'负担得起'},{en:'afraid',cn:'害怕的'},{en:'against',cn:'反对'},{en:'allow',cn:'允许'},{en:'alone',cn:'独自'},
-    {en:'already',cn:'已经'},{en:'although',cn:'虽然'},{en:'ancient',cn:'古代的'},{en:'anger',cn:'愤怒'},{en:'announce',cn:'宣布'},
-    {en:'appear',cn:'出现'},{en:'argue',cn:'争论'},{en:'arrange',cn:'安排'},{en:'arrive',cn:'到达'},{en:'article',cn:'文章'},
-    {en:'attend',cn:'参加'},{en:'attract',cn:'吸引'},{en:'avoid',cn:'避免'},{en:'balance',cn:'平衡'},{en:'battle',cn:'战斗'},
-    {en:'beauty',cn:'美丽'},{en:'believe',cn:'相信'},{en:'belong',cn:'属于'},{en:'benefit',cn:'利益'},{en:'bitter',cn:'苦的'},
-    {en:'blame',cn:'责备'},{en:'blind',cn:'盲的'},{en:'border',cn:'边界'},{en:'brave',cn:'勇敢的'},{en:'breath',cn:'呼吸'},
-    {en:'bright',cn:'明亮的'},{en:'broad',cn:'宽阔的'},{en:'burden',cn:'负担'},{en:'calm',cn:'平静的'},{en:'capital',cn:'首都'},
-    {en:'career',cn:'职业'},{en:'careful',cn:'小心的'},{en:'celebrate',cn:'庆祝'},{en:'central',cn:'中心的'},{en:'century',cn:'世纪'},
-    {en:'certain',cn:'确定的'},{en:'challenge',cn:'挑战'},{en:'chance',cn:'机会'},{en:'change',cn:'改变'},{en:'character',cn:'性格'},
-    {en:'charge',cn:'收费'},{en:'choice',cn:'选择'},{en:'citizen',cn:'公民'},{en:'climate',cn:'气候'},{en:'collect',cn:'收集'},
-    {en:'comfort',cn:'舒适'},{en:'common',cn:'常见的'},{en:'compare',cn:'比较'},{en:'compete',cn:'竞争'},{en:'complete',cn:'完成'},
-    {en:'concern',cn:'关心'},{en:'condition',cn:'条件'},{en:'connect',cn:'连接'},{en:'consider',cn:'考虑'},{en:'contain',cn:'包含'},
-    {en:'continue',cn:'继续'},{en:'control',cn:'控制'},{en:'correct',cn:'正确的'},{en:'courage',cn:'勇气'},{en:'create',cn:'创造'},
-    {en:'culture',cn:'文化'},{en:'curious',cn:'好奇的'},{en:'danger',cn:'危险'},{en:'decide',cn:'决定'},{en:'defend',cn:'防御'},
-    {en:'degree',cn:'程度'},{en:'deliver',cn:'递送'},{en:'demand',cn:'需求'},{en:'depend',cn:'依赖'},{en:'describe',cn:'描述'},
-    {en:'design',cn:'设计'},{en:'destroy',cn:'破坏'},{en:'develop',cn:'发展'},{en:'devote',cn:'奉献'},{en:'discover',cn:'发现'},
-    {en:'discuss',cn:'讨论'},{en:'disease',cn:'疾病'},{en:'distance',cn:'距离'},{en:'disturb',cn:'打扰'},{en:'double',cn:'双倍的'},
-    {en:'doubt',cn:'怀疑'},{en:'eager',cn:'渴望的'},{en:'earn',cn:'赚取'},{en:'educate',cn:'教育'},{en:'effect',cn:'效果'},
-    {en:'effort',cn:'努力'},{en:'employ',cn:'雇佣'},{en:'encourage',cn:'鼓励'},{en:'energy',cn:'能量'}
+    {en:'ability',cn:'能力',audio:'audio/ability.mp3'},{en:'abroad',cn:'国外',audio:'audio/abroad.mp3'},{en:'accept',cn:'接受',audio:'audio/accept.mp3'},{en:'accident',cn:'事故',audio:'audio/accident.mp3'},{en:'achieve',cn:'实现',audio:'audio/achieve.mp3'},
+    {en:'active',cn:'活跃的',audio:'audio/active.mp3'},{en:'actual',cn:'实际的',audio:'audio/actual.mp3'},{en:'admire',cn:'钦佩',audio:'audio/admire.mp3'},{en:'admit',cn:'承认',audio:'audio/admit.mp3'},{en:'advice',cn:'建议',audio:'audio/advice.mp3'},
+    {en:'afford',cn:'负担得起',audio:'audio/afford.mp3'},{en:'afraid',cn:'害怕的',audio:'audio/afraid.mp3'},{en:'against',cn:'反对',audio:'audio/against.mp3'},{en:'allow',cn:'允许',audio:'audio/allow.mp3'},{en:'alone',cn:'独自',audio:'audio/alone.mp3'},
+    {en:'already',cn:'已经',audio:'audio/already.mp3'},{en:'although',cn:'虽然',audio:'audio/although.mp3'},{en:'ancient',cn:'古代的',audio:'audio/ancient.mp3'},{en:'anger',cn:'愤怒',audio:'audio/anger.mp3'},{en:'announce',cn:'宣布',audio:'audio/announce.mp3'},
+    {en:'appear',cn:'出现',audio:'audio/appear.mp3'},{en:'argue',cn:'争论',audio:'audio/argue.mp3'},{en:'arrange',cn:'安排',audio:'audio/arrange.mp3'},{en:'arrive',cn:'到达',audio:'audio/arrive.mp3'},{en:'article',cn:'文章',audio:'audio/article.mp3'},
+    {en:'attend',cn:'参加',audio:'audio/attend.mp3'},{en:'attract',cn:'吸引',audio:'audio/attract.mp3'},{en:'avoid',cn:'避免',audio:'audio/avoid.mp3'},{en:'balance',cn:'平衡',audio:'audio/balance.mp3'},{en:'battle',cn:'战斗',audio:'audio/battle.mp3'},
+    {en:'beauty',cn:'美丽',audio:'audio/beauty.mp3'},{en:'believe',cn:'相信',audio:'audio/believe.mp3'},{en:'belong',cn:'属于',audio:'audio/belong.mp3'},{en:'benefit',cn:'利益',audio:'audio/benefit.mp3'},{en:'bitter',cn:'苦的',audio:'audio/bitter.mp3'},
+    {en:'blame',cn:'责备',audio:'audio/blame.mp3'},{en:'blind',cn:'盲的',audio:'audio/blind.mp3'},{en:'border',cn:'边界',audio:'audio/border.mp3'},{en:'brave',cn:'勇敢的',audio:'audio/brave.mp3'},{en:'breath',cn:'呼吸',audio:'audio/breath.mp3'},
+    {en:'bright',cn:'明亮的',audio:'audio/bright.mp3'},{en:'broad',cn:'宽阔的',audio:'audio/broad.mp3'},{en:'burden',cn:'负担',audio:'audio/burden.mp3'},{en:'calm',cn:'平静的',audio:'audio/calm.mp3'},{en:'capital',cn:'首都',audio:'audio/capital.mp3'},
+    {en:'career',cn:'职业',audio:'audio/career.mp3'},{en:'careful',cn:'小心的',audio:'audio/careful.mp3'},{en:'celebrate',cn:'庆祝',audio:'audio/celebrate.mp3'},{en:'central',cn:'中心的',audio:'audio/central.mp3'},{en:'century',cn:'世纪',audio:'audio/century.mp3'},
+    {en:'certain',cn:'确定的',audio:'audio/certain.mp3'},{en:'challenge',cn:'挑战',audio:'audio/challenge.mp3'},{en:'chance',cn:'机会',audio:'audio/chance.mp3'},{en:'change',cn:'改变',audio:'audio/change.mp3'},{en:'character',cn:'性格',audio:'audio/character.mp3'},
+    {en:'charge',cn:'收费',audio:'audio/charge.mp3'},{en:'choice',cn:'选择',audio:'audio/choice.mp3'},{en:'citizen',cn:'公民',audio:'audio/citizen.mp3'},{en:'climate',cn:'气候',audio:'audio/climate.mp3'},{en:'collect',cn:'收集',audio:'audio/collect.mp3'},
+    {en:'comfort',cn:'舒适',audio:'audio/comfort.mp3'},{en:'common',cn:'常见的',audio:'audio/common.mp3'},{en:'compare',cn:'比较',audio:'audio/compare.mp3'},{en:'compete',cn:'竞争',audio:'audio/compete.mp3'},{en:'complete',cn:'完成',audio:'audio/complete.mp3'},
+    {en:'concern',cn:'关心',audio:'audio/concern.mp3'},{en:'condition',cn:'条件',audio:'audio/condition.mp3'},{en:'connect',cn:'连接',audio:'audio/connect.mp3'},{en:'consider',cn:'考虑',audio:'audio/consider.mp3'},{en:'contain',cn:'包含',audio:'audio/contain.mp3'},
+    {en:'continue',cn:'继续',audio:'audio/continue.mp3'},{en:'control',cn:'控制',audio:'audio/control.mp3'},{en:'correct',cn:'正确的',audio:'audio/correct.mp3'},{en:'courage',cn:'勇气',audio:'audio/courage.mp3'},{en:'create',cn:'创造',audio:'audio/create.mp3'},
+    {en:'culture',cn:'文化',audio:'audio/culture.mp3'},{en:'curious',cn:'好奇的',audio:'audio/curious.mp3'},{en:'danger',cn:'危险',audio:'audio/danger.mp3'},{en:'decide',cn:'决定',audio:'audio/decide.mp3'},{en:'defend',cn:'防御',audio:'audio/defend.mp3'},
+    {en:'degree',cn:'程度',audio:'audio/degree.mp3'},{en:'deliver',cn:'递送',audio:'audio/deliver.mp3'},{en:'demand',cn:'需求',audio:'audio/demand.mp3'},{en:'depend',cn:'依赖',audio:'audio/depend.mp3'},{en:'describe',cn:'描述',audio:'audio/describe.mp3'},
+    {en:'design',cn:'设计',audio:'audio/design.mp3'},{en:'destroy',cn:'破坏',audio:'audio/destroy.mp3'},{en:'develop',cn:'发展',audio:'audio/develop.mp3'},{en:'devote',cn:'奉献',audio:'audio/devote.mp3'},{en:'discover',cn:'发现',audio:'audio/discover.mp3'},
+    {en:'discuss',cn:'讨论',audio:'audio/discuss.mp3'},{en:'disease',cn:'疾病',audio:'audio/disease.mp3'},{en:'distance',cn:'距离',audio:'audio/distance.mp3'},{en:'disturb',cn:'打扰',audio:'audio/disturb.mp3'},{en:'double',cn:'双倍的',audio:'audio/double.mp3'},
+    {en:'doubt',cn:'怀疑',audio:'audio/doubt.mp3'},{en:'eager',cn:'渴望的',audio:'audio/eager.mp3'},{en:'earn',cn:'赚取',audio:'audio/earn.mp3'},{en:'educate',cn:'教育',audio:'audio/educate.mp3'},{en:'effect',cn:'效果',audio:'audio/effect.mp3'},
+    {en:'effort',cn:'努力',audio:'audio/effort.mp3'},{en:'employ',cn:'雇佣',audio:'audio/employ.mp3'},{en:'encourage',cn:'鼓励',audio:'audio/encourage.mp3'},{en:'energy',cn:'能量',audio:'audio/energy.mp3'}
   ]},
   cet4: { name: '英语四级', icon: '🎓', words: [
-    {en:'abandon',cn:'放弃'},{en:'absolute',cn:'绝对的'},{en:'absorb',cn:'吸收'},{en:'abstract',cn:'抽象的'},{en:'abundant',cn:'丰富的'},
-    {en:'academic',cn:'学术的'},{en:'accelerate',cn:'加速'},{en:'access',cn:'通道'},{en:'accompany',cn:'陪伴'},{en:'accomplish',cn:'完成'},
-    {en:'account',cn:'账户'},{en:'accurate',cn:'准确的'},{en:'accuse',cn:'指控'},{en:'adapt',cn:'适应'},{en:'adequate',cn:'充足的'},
-    {en:'adjust',cn:'调整'},{en:'administration',cn:'管理'},{en:'adopt',cn:'采纳'},{en:'advance',cn:'前进'},{en:'adventure',cn:'冒险'},
-    {en:'affair',cn:'事务'},{en:'aggressive',cn:'侵略的'},{en:'agreement',cn:'协议'},{en:'alcohol',cn:'酒精'},{en:'alternative',cn:'替代的'},
-    {en:'amaze',cn:'使惊奇'},{en:'ambition',cn:'野心'},{en:'analyze',cn:'分析'},{en:'annual',cn:'年度的'},{en:'anxiety',cn:'焦虑'},
-    {en:'apparent',cn:'明显的'},{en:'appeal',cn:'呼吁'},{en:'appetite',cn:'食欲'},{en:'apply',cn:'申请'},{en:'appoint',cn:'任命'},
-    {en:'appreciate',cn:'欣赏'},{en:'approach',cn:'方法'},{en:'appropriate',cn:'适当的'},{en:'approve',cn:'批准'},{en:'arise',cn:'出现'},
-    {en:'arouse',cn:'唤醒'},{en:'arrest',cn:'逮捕'},{en:'artificial',cn:'人工的'},{en:'aspect',cn:'方面'},{en:'assemble',cn:'集合'},
-    {en:'assess',cn:'评估'},{en:'assign',cn:'分配'},{en:'assist',cn:'协助'},{en:'associate',cn:'联系'},{en:'assume',cn:'假设'},
-    {en:'atmosphere',cn:'气氛'},{en:'attach',cn:'附上'},{en:'attempt',cn:'尝试'},{en:'attitude',cn:'态度'},{en:'attorney',cn:'律师'},
-    {en:'audience',cn:'观众'},{en:'authority',cn:'权威'},{en:'available',cn:'可用的'},{en:'average',cn:'平均的'},{en:'aware',cn:'意识到的'},
-    {en:'awkward',cn:'尴尬的'},{en:'background',cn:'背景'},{en:'bacteria',cn:'细菌'},{en:'barrier',cn:'障碍'},{en:'behave',cn:'行为'},
-    {en:'biology',cn:'生物学'},{en:'bother',cn:'打扰'},{en:'boundary',cn:'边界'},{en:'brand',cn:'品牌'},{en:'budget',cn:'预算'},
-    {en:'campaign',cn:'运动'},{en:'capable',cn:'有能力的'},{en:'capacity',cn:'容量'},{en:'capture',cn:'捕获'},{en:'category',cn:'类别'},
-    {en:'cautious',cn:'谨慎的'},{en:'ceremony',cn:'仪式'},{en:'champion',cn:'冠军'},{en:'channel',cn:'频道'},{en:'chapter',cn:'章节'},
-    {en:'characteristic',cn:'特征'},{en:'chemical',cn:'化学的'},{en:'circumstance',cn:'环境'},{en:'civilization',cn:'文明'},{en:'claim',cn:'声称'},
-    {en:'classic',cn:'经典的'},{en:'collapse',cn:'倒塌'},{en:'colleague',cn:'同事'},{en:'combine',cn:'结合'},{en:'command',cn:'命令'},
-    {en:'comment',cn:'评论'},{en:'commerce',cn:'商业'},{en:'commit',cn:'承诺'},{en:'communicate',cn:'交流'},{en:'community',cn:'社区'},
-    {en:'companion',cn:'同伴'},{en:'compensate',cn:'补偿'},{en:'complex',cn:'复杂的'},{en:'component',cn:'组件'},{en:'compose',cn:'组成'},
-    {en:'comprehension',cn:'理解'},{en:'concentrate',cn:'集中'},{en:'concept',cn:'概念'},{en:'conclude',cn:'总结'}
+    {en:'abandon',cn:'放弃',audio:'audio/abandon.mp3'},{en:'absolute',cn:'绝对的',audio:'audio/absolute.mp3'},{en:'absorb',cn:'吸收',audio:'audio/absorb.mp3'},{en:'abstract',cn:'抽象的',audio:'audio/abstract.mp3'},{en:'abundant',cn:'丰富的',audio:'audio/abundant.mp3'},
+    {en:'academic',cn:'学术的',audio:'audio/academic.mp3'},{en:'accelerate',cn:'加速',audio:'audio/accelerate.mp3'},{en:'access',cn:'通道',audio:'audio/access.mp3'},{en:'accompany',cn:'陪伴',audio:'audio/accompany.mp3'},{en:'accomplish',cn:'完成',audio:'audio/accomplish.mp3'},
+    {en:'account',cn:'账户',audio:'audio/account.mp3'},{en:'accurate',cn:'准确的',audio:'audio/accurate.mp3'},{en:'accuse',cn:'指控',audio:'audio/accuse.mp3'},{en:'adapt',cn:'适应',audio:'audio/adapt.mp3'},{en:'adequate',cn:'充足的',audio:'audio/adequate.mp3'},
+    {en:'adjust',cn:'调整',audio:'audio/adjust.mp3'},{en:'administration',cn:'管理',audio:'audio/administration.mp3'},{en:'adopt',cn:'采纳',audio:'audio/adopt.mp3'},{en:'advance',cn:'前进',audio:'audio/advance.mp3'},{en:'adventure',cn:'冒险',audio:'audio/adventure.mp3'},
+    {en:'affair',cn:'事务',audio:'audio/affair.mp3'},{en:'aggressive',cn:'侵略的',audio:'audio/aggressive.mp3'},{en:'agreement',cn:'协议',audio:'audio/agreement.mp3'},{en:'alcohol',cn:'酒精',audio:'audio/alcohol.mp3'},{en:'alternative',cn:'替代的',audio:'audio/alternative.mp3'},
+    {en:'amaze',cn:'使惊奇',audio:'audio/amaze.mp3'},{en:'ambition',cn:'野心',audio:'audio/ambition.mp3'},{en:'analyze',cn:'分析',audio:'audio/analyze.mp3'},{en:'annual',cn:'年度的',audio:'audio/annual.mp3'},{en:'anxiety',cn:'焦虑',audio:'audio/anxiety.mp3'},
+    {en:'apparent',cn:'明显的',audio:'audio/apparent.mp3'},{en:'appeal',cn:'呼吁',audio:'audio/appeal.mp3'},{en:'appetite',cn:'食欲',audio:'audio/appetite.mp3'},{en:'apply',cn:'申请',audio:'audio/apply.mp3'},{en:'appoint',cn:'任命',audio:'audio/appoint.mp3'},
+    {en:'appreciate',cn:'欣赏',audio:'audio/appreciate.mp3'},{en:'approach',cn:'方法',audio:'audio/approach.mp3'},{en:'appropriate',cn:'适当的',audio:'audio/appropriate.mp3'},{en:'approve',cn:'批准',audio:'audio/approve.mp3'},{en:'arise',cn:'出现',audio:'audio/arise.mp3'},
+    {en:'arouse',cn:'唤醒',audio:'audio/arouse.mp3'},{en:'arrest',cn:'逮捕',audio:'audio/arrest.mp3'},{en:'artificial',cn:'人工的',audio:'audio/artificial.mp3'},{en:'aspect',cn:'方面',audio:'audio/aspect.mp3'},{en:'assemble',cn:'集合',audio:'audio/assemble.mp3'},
+    {en:'assess',cn:'评估',audio:'audio/assess.mp3'},{en:'assign',cn:'分配',audio:'audio/assign.mp3'},{en:'assist',cn:'协助',audio:'audio/assist.mp3'},{en:'associate',cn:'联系',audio:'audio/associate.mp3'},{en:'assume',cn:'假设',audio:'audio/assume.mp3'},
+    {en:'atmosphere',cn:'气氛',audio:'audio/atmosphere.mp3'},{en:'attach',cn:'附上',audio:'audio/attach.mp3'},{en:'attempt',cn:'尝试',audio:'audio/attempt.mp3'},{en:'attitude',cn:'态度',audio:'audio/attitude.mp3'},{en:'attorney',cn:'律师',audio:'audio/attorney.mp3'},
+    {en:'audience',cn:'观众',audio:'audio/audience.mp3'},{en:'authority',cn:'权威',audio:'audio/authority.mp3'},{en:'available',cn:'可用的',audio:'audio/available.mp3'},{en:'average',cn:'平均的',audio:'audio/average.mp3'},{en:'aware',cn:'意识到的',audio:'audio/aware.mp3'},
+    {en:'awkward',cn:'尴尬的',audio:'audio/awkward.mp3'},{en:'background',cn:'背景',audio:'audio/background.mp3'},{en:'bacteria',cn:'细菌',audio:'audio/bacteria.mp3'},{en:'barrier',cn:'障碍',audio:'audio/barrier.mp3'},{en:'behave',cn:'行为',audio:'audio/behave.mp3'},
+    {en:'biology',cn:'生物学',audio:'audio/biology.mp3'},{en:'bother',cn:'打扰',audio:'audio/bother.mp3'},{en:'boundary',cn:'边界',audio:'audio/boundary.mp3'},{en:'brand',cn:'品牌',audio:'audio/brand.mp3'},{en:'budget',cn:'预算',audio:'audio/budget.mp3'},
+    {en:'campaign',cn:'运动',audio:'audio/campaign.mp3'},{en:'capable',cn:'有能力的',audio:'audio/capable.mp3'},{en:'capacity',cn:'容量',audio:'audio/capacity.mp3'},{en:'capture',cn:'捕获',audio:'audio/capture.mp3'},{en:'category',cn:'类别',audio:'audio/category.mp3'},
+    {en:'cautious',cn:'谨慎的',audio:'audio/cautious.mp3'},{en:'ceremony',cn:'仪式',audio:'audio/ceremony.mp3'},{en:'champion',cn:'冠军',audio:'audio/champion.mp3'},{en:'channel',cn:'频道',audio:'audio/channel.mp3'},{en:'chapter',cn:'章节',audio:'audio/chapter.mp3'},
+    {en:'characteristic',cn:'特征',audio:'audio/characteristic.mp3'},{en:'chemical',cn:'化学的',audio:'audio/chemical.mp3'},{en:'circumstance',cn:'环境',audio:'audio/circumstance.mp3'},{en:'civilization',cn:'文明',audio:'audio/civilization.mp3'},{en:'claim',cn:'声称',audio:'audio/claim.mp3'},
+    {en:'classic',cn:'经典的',audio:'audio/classic.mp3'},{en:'collapse',cn:'倒塌',audio:'audio/collapse.mp3'},{en:'colleague',cn:'同事',audio:'audio/colleague.mp3'},{en:'combine',cn:'结合',audio:'audio/combine.mp3'},{en:'command',cn:'命令',audio:'audio/command.mp3'},
+    {en:'comment',cn:'评论',audio:'audio/comment.mp3'},{en:'commerce',cn:'商业',audio:'audio/commerce.mp3'},{en:'commit',cn:'承诺',audio:'audio/commit.mp3'},{en:'communicate',cn:'交流',audio:'audio/communicate.mp3'},{en:'community',cn:'社区',audio:'audio/community.mp3'},
+    {en:'companion',cn:'同伴',audio:'audio/companion.mp3'},{en:'compensate',cn:'补偿',audio:'audio/compensate.mp3'},{en:'complex',cn:'复杂的',audio:'audio/complex.mp3'},{en:'component',cn:'组件',audio:'audio/component.mp3'},{en:'compose',cn:'组成',audio:'audio/compose.mp3'},
+    {en:'comprehension',cn:'理解',audio:'audio/comprehension.mp3'},{en:'concentrate',cn:'集中',audio:'audio/concentrate.mp3'},{en:'concept',cn:'概念',audio:'audio/concept.mp3'},{en:'conclude',cn:'总结',audio:'audio/conclude.mp3'}
   ]}
 };
 
@@ -799,7 +799,7 @@ function runPronunciationTest() {
     allWords.push(...bank.words);
   }
   const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-  speakWord(randomWord.en);
+  speakWord(randomWord);
   showSpeechStatus('🔊 正在播放: ' + randomWord.en, 'success');
 }
 
@@ -811,7 +811,7 @@ document.getElementById('game-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') checkAnswer();
 });
 document.getElementById('btn-speak').addEventListener('click', () => {
-  if (gameState && gameState.currentWord) speakWord(gameState.currentWord.en);
+  if (gameState && gameState.currentWord) speakWord(gameState.currentWord);
 });
 document.getElementById('btn-play-again').addEventListener('click', startGame);
 document.getElementById('btn-back-menu').addEventListener('click', () => {
@@ -948,7 +948,7 @@ function nextWord() {
   
   // Speak word after card renders
   setTimeout(() => {
-    speakWord(gameState.currentWord.en);
+    speakWord(gameState.currentWord);
   }, 150);
   
   // Spawn animals
@@ -1145,7 +1145,9 @@ let speechDebounce = false;
 let speechRetryCount = 0;
 let speechUtteranceTimeout = null;
 
-function speakWord(text, retry = false) {
+function speakWord(word, retry = false) {
+  const text = typeof word === 'string' ? word : (word && word.en ? word.en : '');
+  
   if (speechDebounce && !retry) {
     return;
   }
@@ -1156,7 +1158,58 @@ function speakWord(text, retry = false) {
     setTimeout(() => { speechDebounce = false; }, 800);
   }
   
-  playAudio(text);
+  if (word && word.audio) {
+    playLocalAudio(word.audio, text);
+  } else {
+    playAudio(text);
+  }
+}
+
+function playLocalAudio(audioPath, text) {
+  if (speechUtteranceTimeout) {
+    clearTimeout(speechUtteranceTimeout);
+  }
+  
+  const audio = new Audio(audioPath);
+  
+  audio.onplaying = () => {
+    console.log('Local audio playing:', text, audioPath);
+    speechUtteranceTimeout = setTimeout(() => {
+      console.warn('Local audio timeout');
+      showSpeechStatus('⚠️ 音频播放超时', 'info');
+    }, 5000);
+  };
+  
+  audio.onended = () => {
+    console.log('Local audio ended:', text);
+    if (speechUtteranceTimeout) {
+      clearTimeout(speechUtteranceTimeout);
+    }
+    speechRetryCount = 0;
+  };
+  
+  audio.onerror = (e) => {
+    console.error('Local audio error:', e);
+    if (speechUtteranceTimeout) {
+      clearTimeout(speechUtteranceTimeout);
+    }
+    
+    if (speechRetryCount < 1) {
+      speechRetryCount++;
+      setTimeout(() => {
+        playLocalAudio(audioPath, text);
+      }, 200);
+      return;
+    }
+    
+    console.log('Falling back to online TTS');
+    playAudio(text);
+  };
+  
+  audio.play().catch(err => {
+    console.error('Local audio play failed:', err);
+    playAudio(text);
+  });
 }
 
 function playAudio(text) {
