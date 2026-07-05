@@ -1,0 +1,5 @@
+_temp_check.js
+node_modules/
+.DS_Store
+Thumbs.db
+*.log

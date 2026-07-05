@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eating Word - 啃单词小游戏</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#FFF8E7;--card:#FFFAF0;--primary:#FF6B6B;--secondary:#4ECDC4;--accent:#FFE66D;--text:#2C3E50;--text-light:#7F8C8D;--success:#2ECC71;--danger:#E74C3C;--warning:#F39C12;--border:#E8D5B7;--shadow:0 4px 20px rgba(0,0,0,0.08);--radius:16px;--font:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;background-image:radial-gradient(circle at 20% 30%,#FFF3CD 0%,transparent 50%),radial-gradient(circle at 80% 70%,#D4F1F4 0%,transparent 50%),radial-gradient(circle at 50% 50%,#FFE8D6 0%,transparent 50%)}
+.screen{display:none;min-height:100vh}.screen.active{display:flex;flex-direction:column;align-items:center}
+#auth-screen{justify-content:center;padding:20px}
+.auth-card{background:var(--card);border-radius:var(--radius);padding:40px 30px;box-shadow:var(--shadow);width:100%;max-width:420px;text-align:center;border:2px solid var(--border)}
+.auth-card h1{font-size:2.2em;margin-bottom:5px}.auth-card h1 .logo{font-size:1.3em}
+.auth-card .subtitle{color:var(--text-light);margin-bottom:25px;font-size:.95em}
+.auth-card .tab-row{display:flex;margin-bottom:20px;border-radius:10px;overflow:hidden;border:2px solid var(--border)}
+.auth-card .tab-row button{flex:1;padding:10px;border:none;background:#fff;cursor:pointer;font-size:1em;font-weight:600;transition:.2s;font-family:var(--font)}
+.auth-card .tab-row button.active{background:var(--primary);color:#fff}
+.auth-card input{width:100%;padding:12px 16px;margin-bottom:12px;border:2px solid var(--border);border-radius:10px;font-size:1em;font-family:var(--font);outline:none;transition:border-color .2s}
+.auth-card input:focus{border-color:var(--secondary)}
+.auth-card .btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:1.1em;font-weight:700;cursor:pointer;transition:.2s;font-family:var(--font);color:#fff;background:var(--primary);margin-top:5px}
+.auth-card .btn:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(255,107,107,0.4)}
+.auth-card .btn:active{transform:translateY(0)}
+.auth-msg{color:var(--danger);font-size:.9em;margin-top:8px;min-height:22px}
+
+#menu-screen{padding:20px}
+.menu-header{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:900px;padding:15px 25px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.menu-header .user-info{font-weight:600;font-size:1.05em;display:flex;align-items:center;gap:8px}
+.menu-header .user-info .avatar{width:36px;height:36px;border-radius:50%;background:var(--secondary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2em}
+.menu-header .btns{display:flex;gap:10px;flex-wrap:wrap}
+.menu-header .btns button{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-family:var(--font);transition:.2s;font-size:.95em}
+.btn-dashboard{background:var(--secondary);color:#fff}.btn-logout{background:#eee;color:var(--text)}
+.btn-dashboard:hover,.btn-logout:hover{transform:translateY(-1px)}
+.menu-content{width:100%;max-width:900px;display:flex;flex-direction:column;gap:20px}
+.menu-section{background:var(--card);border-radius:var(--radius);padding:25px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.menu-section h3{margin-bottom:15px;font-size:1.15em;color:var(--text);display:flex;align-items:center;gap:8px}
+.wordbank-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.wordbank-card{padding:20px 15px;border:3px solid var(--border);border-radius:14px;cursor:pointer;text-align:center;transition:.2s;background:#fff;position:relative}
+.wordbank-card:hover{border-color:var(--secondary);transform:translateY(-2px)}
+.wordbank-card.selected{border-color:var(--primary);background:#FFF5F5}
+.wordbank-card .wb-icon{font-size:2.2em;margin-bottom:8px}
+.wordbank-card .wb-name{font-weight:700;font-size:1.05em}
+.wordbank-card .wb-count{color:var(--text-light);font-size:.85em;margin-top:4px}
+.wordbank-card .wb-progress{margin-top:8px;height:6px;background:#eee;border-radius:3px;overflow:hidden}
+.wordbank-card .wb-progress-bar{height:100%;background:var(--success);border-radius:3px;transition:width .3s}
+.settings-row{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.setting-item{flex:1;min-width:180px}
+.setting-item label{display:block;font-weight:600;margin-bottom:6px;font-size:.9em}
+.setting-item input[type=range]{width:100%;accent-color:var(--primary)}
+.setting-item select{width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:1em;font-family:var(--font);background:#fff;cursor:pointer}
+.speed-labels{display:flex;justify-content:space-between;font-size:.8em;color:var(--text-light)}
+.start-btn{width:100%;padding:18px;border:none;border-radius:14px;font-size:1.3em;font-weight:700;cursor:pointer;transition:.2s;font-family:var(--font);color:#fff;background:linear-gradient(135deg,var(--primary),#FF8E8E);letter-spacing:1px}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(255,107,107,0.4)}
+.start-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+#game-screen{padding:0;position:relative;overflow:hidden}
+.game-topbar{width:100%;padding:10px 20px;background:rgba(255,255,255,0.95);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;box-shadow:0 2px 10px rgba(0,0,0,0.05);z-index:10;position:relative}
+.game-topbar .score-display{font-weight:700;font-size:1.2em;color:var(--primary)}
+.game-topbar .timer-display{font-weight:700;font-size:1.1em}
+.game-topbar .timer-display.warning{color:var(--danger);animation:blink .5s infinite}
+.game-topbar .progress-info{font-size:.9em;color:var(--text-light)}
+.game-topbar button{padding:6px 14px;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-family:var(--font);background:#eee;font-size:.9em}
+@keyframes blink{50%{opacity:.5}}
+.game-stage{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-height:400px;padding:20px}
+.word-card-wrapper{position:relative;width:300px;height:360px;z-index:5}
+.word-card{width:100%;height:100%;background:#fff;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;border:3px solid var(--border);transition:border-color .3s,transform .3s;user-select:none}
+.word-card.correct{border-color:var(--success);animation:cardPop .4s ease}
+.word-card.wrong{border-color:var(--danger);animation:cardShake .4s ease}
+@keyframes cardPop{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes cardShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.word-illustration{width:110px;height:110px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;position:relative;z-index:2}
+.word-illustration svg{width:100%;height:100%}
+.word-en{font-size:2em;font-weight:800;color:var(--text);z-index:2;position:relative;letter-spacing:1px}
+.word-cn{font-size:1.1em;color:var(--text-light);margin-top:6px;z-index:2;position:relative;font-weight:500}
+.card-damage{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3;border-radius:20px;overflow:hidden}
+.card-damage-hole{position:absolute;background:var(--bg);border-radius:50%}
+.animal{position:absolute;z-index:6;pointer-events:none;font-size:2.2em;filter:drop-shadow(2px 2px 2px rgba(0,0,0,0.15));display:inline-block;width:40px;height:40px;line-height:40px;text-align:center}
+.animal.animal-img{width:48px;height:48px;line-height:48px}
+.animal img{width:100%;height:100%;object-fit:contain;display:block}
+.animal.eating{animation:nomNom .3s ease infinite}
+@keyframes nomNom{0%,100%{margin-top:0}50%{margin-top:-6px}}
+.game-input-area{width:100%;max-width:600px;padding:15px 20px;display:flex;gap:10px;align-items:center;background:rgba(255,255,255,0.95);box-shadow:0 -2px 10px rgba(0,0,0,0.05);z-index:10;border-radius:16px 16px 0 0;flex-wrap:wrap}
+.game-input-area input{flex:1;min-width:160px;padding:14px 18px;border:3px solid var(--border);border-radius:12px;font-size:1.2em;font-family:var(--font);outline:none;transition:border-color .2s;background:#fff}
+.game-input-area input:focus{border-color:var(--secondary)}
+.game-input-area .submit-btn,.game-input-area .speak-btn{padding:14px 18px;border:none;border-radius:12px;color:#fff;font-size:1.1em;font-weight:700;cursor:pointer;font-family:var(--font);transition:.2s}
+.game-input-area .submit-btn{background:var(--primary);padding:14px 28px}.game-input-area .submit-btn:hover{background:#e55a5a}
+.game-input-area .speak-btn{background:var(--secondary)}.game-input-area .speak-btn:hover{background:#3cbdb5}
+
+.feedback-overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:100;font-size:3em;font-weight:900;pointer-events:none;animation:feedbackPop .8s ease forwards}
+.feedback-overlay.correct-fb{color:var(--success)}.feedback-overlay.wrong-fb{color:var(--danger)}
+@keyframes feedbackPop{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-70%) scale(1)}}
+
+.dashboard-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:200;display:none;justify-content:flex-end}
+.dashboard-overlay.open{display:flex}
+.dashboard-panel{width:100%;max-width:460px;height:100%;background:var(--card);overflow-y:auto;padding:25px;box-shadow:-4px 0 30px rgba(0,0,0,0.15);animation:slideIn .3s ease;position:relative}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.dashboard-panel h2{margin-bottom:20px;font-size:1.4em;display:flex;align-items:center;gap:10px}
+.dashboard-panel .close-btn{position:absolute;top:15px;right:15px;width:36px;height:36px;border-radius:50%;border:none;background:#eee;cursor:pointer;font-size:1.2em;display:flex;align-items:center;justify-content:center}
+.dashboard-panel .close-btn:hover{background:#ddd}
+.dash-section{margin-bottom:25px;padding:18px;background:#fff;border-radius:12px;border:1px solid var(--border)}
+.dash-section h4{margin-bottom:12px;font-size:1em;color:var(--text)}
+.dash-stat-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0}
+.dash-stat-row:last-child{border-bottom:none}.dash-stat-value{font-weight:700}
+.vocab-list{max-height:300px;overflow-y:auto}
+.vocab-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:#fafafa;transition:.2s}
+.vocab-item:hover{background:#f0f0f0}
+.vocab-item .v-word{font-weight:600}.vocab-item .v-cn{color:var(--text-light);font-size:.85em}
+.vocab-item .v-errors{display:flex;align-items:center;gap:4px;color:var(--danger);font-weight:700}
+.empty-state{text-align:center;color:var(--text-light);padding:20px;font-size:.95em}
+
+.gameover-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:150;display:none;justify-content:center;align-items:center}
+.gameover-overlay.open{display:flex}
+.gameover-card{background:#fff;border-radius:20px;padding:35px;text-align:center;max-width:400px;width:90%;box-shadow:0 10px 50px rgba(0,0,0,0.2);animation:popIn .4s ease}
+@keyframes popIn{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+.gameover-card h2{font-size:1.8em;margin-bottom:15px}.gameover-card .go-stats{margin:15px 0}
+.gameover-card .go-stats p{margin:6px 0;font-size:1.05em}
+.gameover-card button{padding:12px 30px;border:none;border-radius:10px;font-size:1.1em;font-weight:700;cursor:pointer;font-family:var(--font);color:#fff;margin:5px;transition:.2s}
+.go-back-menu{background:var(--secondary)}.go-play-again{background:var(--primary)}
+
+@media(max-width:768px){
+  .auth-card{padding:25px 20px}.auth-card h1{font-size:1.7em}
+  .word-card-wrapper{width:250px;height:310px}.word-en{font-size:1.6em}
+  .word-illustration{width:90px;height:90px}
+  .wordbank-grid{grid-template-columns:repeat(2,1fr)}.settings-row{flex-direction:column}
+  .game-topbar{padding:8px 12px;font-size:.9em}.game-input-area{padding:10px 12px}
+  .game-input-area input{font-size:1em;padding:10px 14px}.game-input-area .submit-btn{padding:10px 18px;font-size:1em}
+  .dashboard-panel{max-width:100%}.menu-header{flex-direction:column;text-align:center}
+}
+@media(max-width:400px){
+  .word-card-wrapper{width:210px;height:270px}.word-en{font-size:1.3em}
+  .word-illustration{width:70px;height:70px}.wordbank-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="auth-screen" class="screen active">
+  <div class="auth-card">
+    <h1><span class="logo">🐛</span> Eating Word</h1>
+    <p class="subtitle">啃单词 · 趣味学英语</p>
+    <div class="tab-row">
+      <button id="tab-login" class="active">登录</button>
+      <button id="tab-register">注册</button>
+    </div>
+    <input type="text" id="auth-username" placeholder="用户名" autocomplete="off">
+    <input type="password" id="auth-password" placeholder="密码" autocomplete="off">
+    <input type="password" id="auth-password2" placeholder="确认密码" style="display:none" autocomplete="off">
+    <button class="btn" id="auth-submit">登录</button>
+    <p class="auth-msg" id="auth-msg"></p>
+  </div>
+</div>
+
+<div id="menu-screen" class="screen">
+  <div class="menu-header">
+    <div class="user-info"><div class="avatar" id="menu-avatar">🐣</div><span id="menu-username"></span></div>
+    <div class="btns">
+      <button class="btn-dashboard" id="btn-open-dashboard">📊 学习中心</button>
+      <button class="btn-logout" id="btn-logout">退出登录</button>
+    </div>
+  </div>
+  <div class="menu-content">
+    <div class="menu-section">
+      <h3>📚 选择词库</h3>
+      <div class="wordbank-grid" id="wordbank-grid"></div>
+    </div>
+    <div class="menu-section">
+      <h3>⚙️ 游戏设置</h3>
+      <div class="settings-row">
+        <div class="setting-item">
+          <label>🐛 啃食速度: <span id="speed-label">中速</span></label>
+          <input type="range" id="speed-slider" min="1" max="5" value="3" step="1">
+          <div class="speed-labels"><span>慢速</span><span>快速</span></div>
+        </div>
+        <div class="setting-item">
+          <label>📝 单词数量</label>
+          <select id="word-count-select">
+            <option value="15">15 个</option><option value="20" selected>20 个</option>
+            <option value="100">100 个</option><option value="150">150 个</option><option value="200">200 个</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>⏱️ 游戏时间</label>
+          <select id="game-time-select">
+            <option value="5">5 分钟</option><option value="10" selected>10 分钟</option>
+            <option value="15">15 分钟</option><option value="20">20 分钟</option>
+            <option value="25">25 分钟</option><option value="30">30 分钟</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <button class="start-btn" id="btn-start-game" disabled>🎮 开始游戏</button>
+  </div>
+</div>
+
+<div id="game-screen" class="screen">
+  <div class="game-topbar">
+    <div class="score-display">⭐ <span id="game-score">0</span></div>
+    <div class="progress-info">📖 <span id="game-progress">0/20</span></div>
+    <div class="timer-display" id="game-timer">⏱️ 10:00</div>
+    <button id="btn-quit-game">退出</button>
+  </div>
+  <div class="game-stage" id="game-stage">
+    <div class="word-card-wrapper" id="card-wrapper">
+      <div class="word-card" id="word-card">
+        <div class="word-illustration" id="word-illustration"></div>
+        <div class="word-en" id="word-en"></div>
+        <div class="word-cn" id="word-cn"></div>
+        <div class="card-damage" id="card-damage"></div>
+      </div>
+    </div>
+  </div>
+  <div class="game-input-area">
+    <button class="speak-btn" id="btn-speak" title="朗读发音">🔊</button>
+    <input type="text" id="game-input" placeholder="输入英文单词..." autocomplete="off">
+    <button class="submit-btn" id="btn-submit">确认</button>
+  </div>
+</div>
+
+<div class="dashboard-overlay" id="dashboard-overlay">
+  <div class="dashboard-panel" id="dashboard-panel">
+    <button class="close-btn" id="btn-close-dashboard">✕</button>
+    <h2>📊 学习中心</h2>
+    <div class="dash-section">
+      <h4>📈 学习进度</h4>
+      <div class="dash-stat-row"><span>当前词库</span><span class="dash-stat-value" id="ds-current-bank">-</span></div>
+      <div class="dash-stat-row"><span>总学习进度</span><span class="dash-stat-value" id="ds-progress">0%</span></div>
+      <div class="dash-stat-row"><span>已掌握单词</span><span class="dash-stat-value" id="ds-mastered">0</span></div>
+    </div>
+    <div class="dash-section">
+      <h4>🏆 历史战绩</h4>
+      <div class="dash-stat-row"><span>历史总分</span><span class="dash-stat-value" id="ds-total-score">0</span></div>
+      <div class="dash-stat-row"><span>总答题数</span><span class="dash-stat-value" id="ds-total-answers">0</span></div>
+      <div class="dash-stat-row"><span>正确率</span><span class="dash-stat-value" id="ds-accuracy">0%</span></div>
+      <div class="dash-stat-row"><span>游戏场次</span><span class="dash-stat-value" id="ds-games">0</span></div>
+    </div>
+    <div class="dash-section">
+      <h4>📕 生词本</h4>
+      <div class="vocab-list" id="vocab-list"><div class="empty-state">暂无生词，继续加油！</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="gameover-overlay" id="gameover-overlay">
+  <div class="gameover-card">
+    <h2 id="go-title">🎉 游戏结束</h2>
+    <div class="go-stats">
+      <p>⭐ 得分: <strong id="go-score">0</strong></p>
+      <p>✅ 正确: <strong id="go-correct">0</strong></p>
+      <p>❌ 错误: <strong id="go-wrong">0</strong></p>
+      <p>📕 新增生词: <strong id="go-new-vocab">0</strong></p>
+    </div>
+    <button class="go-play-again" id="btn-play-again">再来一局</button>
+    <button class="go-back-menu" id="btn-back-menu">返回菜单</button>
+  </div>
+</div>
+
+<script>
+// ==================== WORD BANKS ====================
+const WORD_BANKS = {
+  verbs: { name: '动词词库', icon: '🏃', words: [
+    {en:'run',cn:'跑'},{en:'eat',cn:'吃'},{en:'sleep',cn:'睡觉'},{en:'walk',cn:'走'},{en:'jump',cn:'跳'},
+    {en:'swim',cn:'游泳'},{en:'fly',cn:'飞'},{en:'read',cn:'阅读'},{en:'write',cn:'写'},{en:'sing',cn:'唱歌'},
+    {en:'dance',cn:'跳舞'},{en:'drink',cn:'喝'},{en:'cook',cn:'烹饪'},{en:'draw',cn:'画画'},{en:'climb',cn:'爬'},
+    {en:'drive',cn:'驾驶'},{en:'smile',cn:'微笑'},{en:'cry',cn:'哭'},{en:'think',cn:'思考'},{en:'speak',cn:'说话'},
+    {en:'listen',cn:'听'},{en:'open',cn:'打开'},{en:'close',cn:'关闭'},{en:'push',cn:'推'},{en:'pull',cn:'拉'},
+    {en:'throw',cn:'扔'},{en:'catch',cn:'接住'},{en:'build',cn:'建造'},{en:'clean',cn:'打扫'},{en:'wash',cn:'洗'},
+    {en:'buy',cn:'买'},{en:'sell',cn:'卖'},{en:'give',cn:'给'},{en:'take',cn:'拿'},{en:'make',cn:'制作'},
+    {en:'break',cn:'打破'},{en:'cut',cn:'切'},{en:'hit',cn:'打'},{en:'hold',cn:'握住'},{en:'kick',cn:'踢'},
+    {en:'kiss',cn:'亲吻'},{en:'laugh',cn:'笑'},{en:'learn',cn:'学习'},{en:'teach',cn:'教'},{en:'play',cn:'玩'},
+    {en:'ride',cn:'骑'},{en:'sit',cn:'坐'},{en:'stand',cn:'站'},{en:'stop',cn:'停止'},{en:'turn',cn:'转'},
+    {en:'wait',cn:'等待'},{en:'win',cn:'赢'},{en:'lose',cn:'输'},{en:'begin',cn:'开始'},{en:'finish',cn:'完成'},
+    {en:'help',cn:'帮助'},{en:'like',cn:'喜欢'},{en:'love',cn:'爱'},{en:'hate',cn:'恨'},{en:'want',cn:'想要'},
+    {en:'carry',cn:'搬运'},{en:'count',cn:'数数'},{en:'dig',cn:'挖'},{en:'drop',cn:'掉落'},{en:'fall',cn:'跌倒'},
+    {en:'fight',cn:'打架'},{en:'find',cn:'找到'},{en:'fix',cn:'修理'},{en:'follow',cn:'跟随'},{en:'forget',cn:'忘记'},
+    {en:'grow',cn:'生长'},{en:'hang',cn:'悬挂'},{en:'hide',cn:'躲藏'},{en:'hope',cn:'希望'},{en:'hurry',cn:'赶快'},
+    {en:'invite',cn:'邀请'},{en:'keep',cn:'保持'},{en:'lead',cn:'带领'},{en:'leave',cn:'离开'},{en:'lie',cn:'躺'},
+    {en:'lift',cn:'举起'},{en:'meet',cn:'遇见'},{en:'miss',cn:'想念'},{en:'move',cn:'移动'},{en:'need',cn:'需要'},
+    {en:'paint',cn:'涂画'},{en:'pass',cn:'通过'},{en:'pick',cn:'捡起'},{en:'plan',cn:'计划'},{en:'point',cn:'指向'},
+    {en:'promise',cn:'承诺'},{en:'protect',cn:'保护'},{en:'reach',cn:'到达'},{en:'remember',cn:'记住'},{en:'repeat',cn:'重复'},
+    {en:'rest',cn:'休息'},{en:'return',cn:'返回'},{en:'save',cn:'保存'},{en:'search',cn:'搜索'},{en:'send',cn:'发送'},
+    {en:'shake',cn:'摇晃'},{en:'share',cn:'分享'},{en:'shout',cn:'喊叫'},{en:'show',cn:'展示'},{en:'stay',cn:'停留'},
+    {en:'study',cn:'学习'},{en:'talk',cn:'交谈'},{en:'tell',cn:'告诉'},{en:'travel',cn:'旅行'},{en:'try',cn:'尝试'},
+    {en:'use',cn:'使用'},{en:'visit',cn:'拜访'},{en:'watch',cn:'观看'},{en:'wear',cn:'穿'},{en:'work',cn:'工作'},
+    {en:'worry',cn:'担心'},{en:'bring',cn:'带来'},{en:'choose',cn:'选择'},{en:'feel',cn:'感觉'},{en:'fill',cn:'填满'},
+    {en:'happen',cn:'发生'},{en:'imagine',cn:'想象'},{en:'improve',cn:'改善'},{en:'include',cn:'包括'},{en:'increase',cn:'增加'},
+    {en:'explain',cn:'解释'},{en:'express',cn:'表达'}
+  ]},
+  elementary: { name: '小学词汇', icon: '🎒', words: [
+    {en:'apple',cn:'苹果'},{en:'book',cn:'书'},{en:'cat',cn:'猫'},{en:'dog',cn:'狗'},{en:'egg',cn:'鸡蛋'},
+    {en:'fish',cn:'鱼'},{en:'girl',cn:'女孩'},{en:'house',cn:'房子'},{en:'ice',cn:'冰'},{en:'juice',cn:'果汁'},
+    {en:'king',cn:'国王'},{en:'lion',cn:'狮子'},{en:'milk',cn:'牛奶'},{en:'nose',cn:'鼻子'},{en:'orange',cn:'橙子'},
+    {en:'pen',cn:'钢笔'},{en:'queen',cn:'女王'},{en:'rain',cn:'雨'},{en:'sun',cn:'太阳'},{en:'tree',cn:'树'},
+    {en:'umbrella',cn:'雨伞'},{en:'van',cn:'面包车'},{en:'water',cn:'水'},{en:'box',cn:'盒子'},{en:'yellow',cn:'黄色'},
+    {en:'zoo',cn:'动物园'},{en:'bird',cn:'鸟'},{en:'cake',cn:'蛋糕'},{en:'door',cn:'门'},{en:'ear',cn:'耳朵'},
+    {en:'foot',cn:'脚'},{en:'goat',cn:'山羊'},{en:'hand',cn:'手'},{en:'ink',cn:'墨水'},{en:'jam',cn:'果酱'},
+    {en:'kite',cn:'风筝'},{en:'leg',cn:'腿'},{en:'moon',cn:'月亮'},{en:'nest',cn:'鸟巢'},{en:'oil',cn:'油'},
+    {en:'pig',cn:'猪'},{en:'rice',cn:'米饭'},{en:'star',cn:'星星'},{en:'toy',cn:'玩具'},{en:'cup',cn:'杯子'},
+    {en:'wall',cn:'墙'},{en:'snow',cn:'雪'},{en:'bear',cn:'熊'},{en:'baby',cn:'宝宝'},{en:'ball',cn:'球'},
+    {en:'boat',cn:'船'},{en:'chair',cn:'椅子'},{en:'clock',cn:'时钟'},{en:'cloud',cn:'云'},{en:'coat',cn:'外套'},
+    {en:'cow',cn:'奶牛'},{en:'desk',cn:'书桌'},{en:'duck',cn:'鸭子'},{en:'eye',cn:'眼睛'},{en:'face',cn:'脸'},
+    {en:'farm',cn:'农场'},{en:'fire',cn:'火'},{en:'flag',cn:'旗子'},{en:'flower',cn:'花'},{en:'food',cn:'食物'},
+    {en:'frog',cn:'青蛙'},{en:'game',cn:'游戏'},{en:'garden',cn:'花园'},{en:'gift',cn:'礼物'},{en:'grass',cn:'草'},
+    {en:'hat',cn:'帽子'},{en:'head',cn:'头'},{en:'hill',cn:'小山'},{en:'horse',cn:'马'},{en:'key',cn:'钥匙'},
+    {en:'lake',cn:'湖'},{en:'lamp',cn:'灯'},{en:'leaf',cn:'叶子'},{en:'map',cn:'地图'},{en:'monkey',cn:'猴子'},
+    {en:'mouth',cn:'嘴巴'},{en:'name',cn:'名字'},{en:'night',cn:'夜晚'},{en:'park',cn:'公园'},{en:'plane',cn:'飞机'},
+    {en:'rabbit',cn:'兔子'},{en:'ring',cn:'戒指'},{en:'river',cn:'河流'},{en:'road',cn:'路'},{en:'room',cn:'房间'},
+    {en:'school',cn:'学校'},{en:'sheep',cn:'绵羊'},{en:'ship',cn:'船'},{en:'shoe',cn:'鞋子'},{en:'sky',cn:'天空'},
+    {en:'snake',cn:'蛇'},{en:'sock',cn:'袜子'},{en:'street',cn:'街道'},{en:'table',cn:'桌子'},{en:'tiger',cn:'老虎'},
+    {en:'town',cn:'城镇'},{en:'train',cn:'火车'},{en:'wind',cn:'风'},{en:'window',cn:'窗户'},{en:'wood',cn:'木头'},
+    {en:'bed',cn:'床'},{en:'bread',cn:'面包'},{en:'bridge',cn:'桥'},{en:'brush',cn:'刷子'},{en:'card',cn:'卡片'},
+    {en:'cheese',cn:'奶酪'},{en:'chicken',cn:'鸡'},{en:'dress',cn:'连衣裙'},{en:'drum',cn:'鼓'},{en:'family',cn:'家庭'}
+  ]},
+  middle: { name: '中学词汇', icon: '📖', words: [
+    {en:'ability',cn:'能力'},{en:'abroad',cn:'国外'},{en:'accept',cn:'接受'},{en:'accident',cn:'事故'},{en:'achieve',cn:'实现'},
+    {en:'active',cn:'活跃的'},{en:'actual',cn:'实际的'},{en:'admire',cn:'钦佩'},{en:'admit',cn:'承认'},{en:'advice',cn:'建议'},
+    {en:'afford',cn:'负担得起'},{en:'afraid',cn:'害怕的'},{en:'against',cn:'反对'},{en:'allow',cn:'允许'},{en:'alone',cn:'独自'},
+    {en:'already',cn:'已经'},{en:'although',cn:'虽然'},{en:'ancient',cn:'古代的'},{en:'anger',cn:'愤怒'},{en:'announce',cn:'宣布'},
+    {en:'appear',cn:'出现'},{en:'argue',cn:'争论'},{en:'arrange',cn:'安排'},{en:'arrive',cn:'到达'},{en:'article',cn:'文章'},
+    {en:'attend',cn:'参加'},{en:'attract',cn:'吸引'},{en:'avoid',cn:'避免'},{en:'balance',cn:'平衡'},{en:'battle',cn:'战斗'},
+    {en:'beauty',cn:'美丽'},{en:'believe',cn:'相信'},{en:'belong',cn:'属于'},{en:'benefit',cn:'利益'},{en:'bitter',cn:'苦的'},
+    {en:'blame',cn:'责备'},{en:'blind',cn:'盲的'},{en:'border',cn:'边界'},{en:'brave',cn:'勇敢的'},{en:'breath',cn:'呼吸'},
+    {en:'bright',cn:'明亮的'},{en:'broad',cn:'宽阔的'},{en:'burden',cn:'负担'},{en:'calm',cn:'平静的'},{en:'capital',cn:'首都'},
+    {en:'career',cn:'职业'},{en:'careful',cn:'小心的'},{en:'celebrate',cn:'庆祝'},{en:'central',cn:'中心的'},{en:'century',cn:'世纪'},
+    {en:'certain',cn:'确定的'},{en:'challenge',cn:'挑战'},{en:'chance',cn:'机会'},{en:'change',cn:'改变'},{en:'character',cn:'性格'},
+    {en:'charge',cn:'收费'},{en:'choice',cn:'选择'},{en:'citizen',cn:'公民'},{en:'climate',cn:'气候'},{en:'collect',cn:'收集'},
+    {en:'comfort',cn:'舒适'},{en:'common',cn:'常见的'},{en:'compare',cn:'比较'},{en:'compete',cn:'竞争'},{en:'complete',cn:'完成'},
+    {en:'concern',cn:'关心'},{en:'condition',cn:'条件'},{en:'connect',cn:'连接'},{en:'consider',cn:'考虑'},{en:'contain',cn:'包含'},
+    {en:'continue',cn:'继续'},{en:'control',cn:'控制'},{en:'correct',cn:'正确的'},{en:'courage',cn:'勇气'},{en:'create',cn:'创造'},
+    {en:'culture',cn:'文化'},{en:'curious',cn:'好奇的'},{en:'danger',cn:'危险'},{en:'decide',cn:'决定'},{en:'defend',cn:'防御'},
+    {en:'degree',cn:'程度'},{en:'deliver',cn:'递送'},{en:'demand',cn:'需求'},{en:'depend',cn:'依赖'},{en:'describe',cn:'描述'},
+    {en:'design',cn:'设计'},{en:'destroy',cn:'破坏'},{en:'develop',cn:'发展'},{en:'devote',cn:'奉献'},{en:'discover',cn:'发现'},
+    {en:'discuss',cn:'讨论'},{en:'disease',cn:'疾病'},{en:'distance',cn:'距离'},{en:'disturb',cn:'打扰'},{en:'double',cn:'双倍的'},
+    {en:'doubt',cn:'怀疑'},{en:'eager',cn:'渴望的'},{en:'earn',cn:'赚取'},{en:'educate',cn:'教育'},{en:'effect',cn:'效果'},
+    {en:'effort',cn:'努力'},{en:'employ',cn:'雇佣'},{en:'encourage',cn:'鼓励'},{en:'energy',cn:'能量'}
+  ]},
+  cet4: { name: '英语四级', icon: '🎓', words: [
+    {en:'abandon',cn:'放弃'},{en:'absolute',cn:'绝对的'},{en:'absorb',cn:'吸收'},{en:'abstract',cn:'抽象的'},{en:'abundant',cn:'丰富的'},
+    {en:'academic',cn:'学术的'},{en:'accelerate',cn:'加速'},{en:'access',cn:'通道'},{en:'accompany',cn:'陪伴'},{en:'accomplish',cn:'完成'},
+    {en:'account',cn:'账户'},{en:'accurate',cn:'准确的'},{en:'accuse',cn:'指控'},{en:'adapt',cn:'适应'},{en:'adequate',cn:'充足的'},
+    {en:'adjust',cn:'调整'},{en:'administration',cn:'管理'},{en:'adopt',cn:'采纳'},{en:'advance',cn:'前进'},{en:'adventure',cn:'冒险'},
+    {en:'affair',cn:'事务'},{en:'aggressive',cn:'侵略的'},{en:'agreement',cn:'协议'},{en:'alcohol',cn:'酒精'},{en:'alternative',cn:'替代的'},
+    {en:'amaze',cn:'使惊奇'},{en:'ambition',cn:'野心'},{en:'analyze',cn:'分析'},{en:'annual',cn:'年度的'},{en:'anxiety',cn:'焦虑'},
+    {en:'apparent',cn:'明显的'},{en:'appeal',cn:'呼吁'},{en:'appetite',cn:'食欲'},{en:'apply',cn:'申请'},{en:'appoint',cn:'任命'},
+    {en:'appreciate',cn:'欣赏'},{en:'approach',cn:'方法'},{en:'appropriate',cn:'适当的'},{en:'approve',cn:'批准'},{en:'arise',cn:'出现'},
+    {en:'arouse',cn:'唤醒'},{en:'arrest',cn:'逮捕'},{en:'artificial',cn:'人工的'},{en:'aspect',cn:'方面'},{en:'assemble',cn:'集合'},
+    {en:'assess',cn:'评估'},{en:'assign',cn:'分配'},{en:'assist',cn:'协助'},{en:'associate',cn:'联系'},{en:'assume',cn:'假设'},
+    {en:'atmosphere',cn:'气氛'},{en:'attach',cn:'附上'},{en:'attempt',cn:'尝试'},{en:'attitude',cn:'态度'},{en:'attorney',cn:'律师'},
+    {en:'audience',cn:'观众'},{en:'authority',cn:'权威'},{en:'available',cn:'可用的'},{en:'average',cn:'平均的'},{en:'aware',cn:'意识到的'},
+    {en:'awkward',cn:'尴尬的'},{en:'background',cn:'背景'},{en:'bacteria',cn:'细菌'},{en:'barrier',cn:'障碍'},{en:'behave',cn:'行为'},
+    {en:'biology',cn:'生物学'},{en:'bother',cn:'打扰'},{en:'boundary',cn:'边界'},{en:'brand',cn:'品牌'},{en:'budget',cn:'预算'},
+    {en:'campaign',cn:'运动'},{en:'capable',cn:'有能力的'},{en:'capacity',cn:'容量'},{en:'capture',cn:'捕获'},{en:'category',cn:'类别'},
+    {en:'cautious',cn:'谨慎的'},{en:'ceremony',cn:'仪式'},{en:'champion',cn:'冠军'},{en:'channel',cn:'频道'},{en:'chapter',cn:'章节'},
+    {en:'characteristic',cn:'特征'},{en:'chemical',cn:'化学的'},{en:'circumstance',cn:'环境'},{en:'civilization',cn:'文明'},{en:'claim',cn:'声称'},
+    {en:'classic',cn:'经典的'},{en:'collapse',cn:'倒塌'},{en:'colleague',cn:'同事'},{en:'combine',cn:'结合'},{en:'command',cn:'命令'},
+    {en:'comment',cn:'评论'},{en:'commerce',cn:'商业'},{en:'commit',cn:'承诺'},{en:'communicate',cn:'交流'},{en:'community',cn:'社区'},
+    {en:'companion',cn:'同伴'},{en:'compensate',cn:'补偿'},{en:'complex',cn:'复杂的'},{en:'component',cn:'组件'},{en:'compose',cn:'组成'},
+    {en:'comprehension',cn:'理解'},{en:'concentrate',cn:'集中'},{en:'concept',cn:'概念'},{en:'conclude',cn:'总结'}
+  ]}
+};
+
+// ==================== SVG ILLUSTRATION GENERATOR ====================
+// Map words to illustrated categories
+const WORD_CATEGORY_MAP = {
+  // Animals
+  cat:1,dog:1,bird:1,fish:1,lion:1,tiger:1,bear:1,monkey:1,rabbit:1,duck:1,cow:1,pig:1,horse:1,sheep:1,goat:1,frog:1,snake:1,chicken:1,elephant:1,mouse:1,ant:1,bee:1,butterfly:1,whale:1,dolphin:1,shark:1,spider:1,panda:1,koala:1,giraffe:1,zebra:1,
+  // Food & Drinks
+  apple:2,orange:2,cake:2,bread:2,egg:2,milk:2,juice:2,rice:2,cheese:2,jam:2,food:2,water:2,banana:2,grape:2,lemon:2,peach:2,cherry:2,strawberry:2,watermelon:2,pizza:2,hamburger:2,cookie:2,candy:2,chocolate:2,coffee:2,tea:2,beer:2,wine:2,sugar:2,salt:2,ice:2,cream:2,
+  // Nature
+  sun:3,moon:3,star:3,tree:3,flower:3,rain:3,snow:3,cloud:3,sky:3,wind:3,fire:3,river:3,lake:3,hill:3,mountain:3,grass:3,leaf:3,wood:3,stone:3,sea:3,ocean:3,earth:3,forest:3,island:3,desert:3,volcano:3,lightning:3,rainbow:3,
+  // Objects & Things
+  book:4,pen:4,door:4,box:4,chair:4,table:4,desk:4,clock:4,key:4,lamp:4,ring:4,hat:4,shoe:4,sock:4,coat:4,dress:4,flag:4,map:4,card:4,ball:4,toy:4,umbrella:4,brush:4,boat:4,ship:4,plane:4,train:4,car:4,bike:4,bridge:4,wall:4,window:4,bed:4,phone:4,computer:4,camera:4,television:4,mirror:4,bag:4,basket:4,bottle:4,guitar:4,drum:4,piano:4,sword:4,shield:4,crown:4,anchor:4,rocket:4,
+  // People & Body
+  girl:5,boy:5,baby:5,king:5,queen:5,eye:5,ear:5,nose:5,mouth:5,hand:5,foot:5,head:5,face:5,leg:5,arm:5,heart:5,body:5,family:5,friend:5,man:5,woman:5,child:5,student:5,teacher:5,doctor:5,soldier:5,police:5,farmer:5,driver:5,
+  // Buildings & Places
+  house:6,school:6,garden:6,park:6,zoo:6,farm:6,town:6,street:6,room:6,restaurant:6,hospital:6,church:6,castle:6,tower:6,market:6,library:6,station:6,airport:6,hotel:6,bank:6,store:6,shop:6,kitchen:6,bathroom:6,
+  // Actions (verbs with visual)
+  run:7,walk:7,jump:7,swim:7,fly:7,dance:7,sing:7,read:7,write:7,draw:7,paint:7,cook:7,eat:7,drink:7,sleep:7,climb:7,drive:7,kick:7,throw:7,catch:7,push:7,pull:7,lift:7,carry:7,dig:7,cut:7,build:7,clean:7,wash:7,sit:7,stand:7,fight:7,hit:7,hold:7,shake:7,speak:7,listen:7,open:7,close:7,learn:7,teach:7,play:7,ride:7,stop:7,begin:7,finish:7,help:7,carry:7,count:7,find:7,fix:7,hide:7,meet:7,move:7,pick:7,point:7,rest:7,search:7,send:7,share:7,shout:7,show:7,study:7,talk:7,tell:7,travel:7,visit:7,watch:7,wear:7,work:7,bring:7,choose:7,feel:7,fill:7,explain:7,express:7,
+  // Emotions
+  smile:8,laugh:8,cry:8,happy:8,sad:8,angry:8,afraid:8,brave:8,shy:8,calm:8,worry:8,love:8,hate:8,hope:8,doubt:8,surprise:8,excite:8,
+  // Colors
+  red:9,blue:9,green:9,yellow:9,white:9,black:9,pink:9,purple:9,orange:9,brown:9,gold:9,silver:9,
+};
+
+function getWordCategory(wordEn) {
+  // Check direct match
+  if (WORD_CATEGORY_MAP[wordEn]) return WORD_CATEGORY_MAP[wordEn];
+  // Check if it contains known words
+  for (const [kw, cat] of Object.entries(WORD_CATEGORY_MAP)) {
+    if (wordEn.includes(kw) || kw.includes(wordEn)) return cat;
+  }
+  return 0;
+}
+
+function getWordIllustration(word) {
+  const cat = getWordCategory(word.en.toLowerCase());
+  const h = hashStr(word.en);
+  const colors = ['#FF6B6B','#4ECDC4','#FFE66D','#FFB347','#87CEEB','#FF8C94','#A8E6CF','#FFD3B6','#DCD3FF','#B5EAD7','#FF9FF3','#54A0FF','#5F27CD','#01A3A4','#F368E0','#EE5A24','#009432','#0652DD','#9980FA','#FDA7DF'];
+  const c1 = colors[h % colors.length];
+  const c2 = colors[(h + 7) % colors.length];
+  const bg = colors[(h + 3) % colors.length];
+  
+  const svgs = {
+    // 1 - Animals
+    1: () => {
+      const animals = {
+        cat: `<ellipse cx="50" cy="58" rx="28" ry="24" fill="${c1}"/><circle cx="50" cy="38" r="18" fill="${c1}"/><polygon points="40,35 20,22 28,35" fill="${c1}"/><polygon points="60,35 80,22 72,35" fill="${c1}"/><circle cx="43" cy="36" r="3" fill="#333"/><circle cx="57" cy="36" r="3" fill="#333"/><ellipse cx="50" cy="42" rx="4" ry="2" fill="#FF8C94"/><line x1="50" y1="44" x2="50" y2="50" stroke="#333" stroke-width="1.5"/><line x1="50" y1="50" x2="44" y2="54" stroke="#333" stroke-width="1.5"/><line x1="50" y1="50" x2="56" y2="54" stroke="#333" stroke-width="1.5"/>`,
+        dog: `<ellipse cx="50" cy="58" rx="28" ry="22" fill="${c1}"/><circle cx="50" cy="36" r="18" fill="${c1}"/><ellipse cx="32" cy="28" rx="10" ry="16" fill="${c2}" transform="rotate(-15,32,28)"/><ellipse cx="68" cy="28" rx="10" ry="16" fill="${c2}" transform="rotate(15,68,28)"/><circle cx="43" cy="34" r="3" fill="#333"/><circle cx="57" cy="34" r="3" fill="#333"/><ellipse cx="50" cy="40" rx="4" ry="3" fill="#333"/><ellipse cx="50" cy="46" rx="5" ry="2" fill="#FF8C94"/>`,
+        bird: `<ellipse cx="50" cy="50" rx="24" ry="18" fill="${c1}"/><circle cx="50" cy="32" r="14" fill="${c1}"/><polygon points="62,32 78,28 64,38" fill="#FFB347"/><circle cx="46" cy="30" r="2.5" fill="#333"/><circle cx="46" cy="32" r="1" fill="#fff"/><polygon points="58,38 50,42 56,58 64,54" fill="${c2}" transform="rotate(-10,56,48)"/><line x1="58" y1="68" x2="56" y2="78" stroke="#FFB347" stroke-width="2"/><line x1="44" y1="68" x2="42" y2="78" stroke="#FFB347" stroke-width="2"/>`,
+        fish: `<ellipse cx="50" cy="50" rx="28" ry="18" fill="${c1}"/><polygon points="78,50 95,38 95,62" fill="${c2}"/><circle cx="36" cy="46" r="3" fill="#fff"/><circle cx="36" cy="46" r="1.5" fill="#333"/><path d="M42,54 Q50,60 58,54" fill="none" stroke="#FF8C94" stroke-width="1.5"/>`,
+        bear: `<ellipse cx="50" cy="60" rx="30" ry="24" fill="${c1}"/><circle cx="50" cy="36" r="20" fill="${c1}"/><circle cx="38" cy="28" r="8" fill="${c2}"/><circle cx="62" cy="28" r="8" fill="${c2}"/><circle cx="43" cy="34" r="3" fill="#333"/><circle cx="57" cy="34" r="3" fill="#333"/><ellipse cx="50" cy="40" rx="4" ry="2" fill="#333"/><ellipse cx="50" cy="46" rx="2" ry="2" fill="#FF8C94"/>`,
+        default: `<ellipse cx="50" cy="58" rx="26" ry="22" fill="${c1}"/><circle cx="50" cy="36" r="18" fill="${c1}"/><circle cx="43" cy="34" r="3" fill="#333"/><circle cx="57" cy="34" r="3" fill="#333"/><ellipse cx="50" cy="40" rx="4" ry="2" fill="#FF8C94"/><circle cx="50" cy="46" r="3" fill="${c2}"/>`
+      };
+      const w = word.en.toLowerCase();
+      return animals[w] || animals.default;
+    },
+    // 2 - Food
+    2: () => {
+      const foods = {
+        apple: `<circle cx="50" cy="48" r="22" fill="#FF4444"/><ellipse cx="50" cy="48" rx="22" ry="20" fill="${c1}"/><path d="M50,28 Q48,18 52,10" stroke="#4CAF50" stroke-width="2.5" fill="none"/><ellipse cx="58" cy="12" rx="10" ry="5" fill="#4CAF50" transform="rotate(-20,58,12)"/><circle cx="45" cy="42" r="4" fill="#fff" opacity="0.4"/>`,
+        cake: `<rect x="22" y="36" width="56" height="40" rx="6" fill="${c1}"/><rect x="22" y="36" width="56" height="12" rx="3" fill="#FFB6C1"/><circle cx="35" cy="42" r="4" fill="#FF4444"/><circle cx="50" cy="42" r="4" fill="#FFD700"/><circle cx="65" cy="42" r="4" fill="#FF4444"/><rect x="28" y="20" width="4" height="16" fill="#FFD700" rx="1"/><rect x="40" y="16" width="4" height="20" fill="#FFD700" rx="1"/><rect x="56" y="20" width="4" height="16" fill="#FFD700" rx="1"/>`,
+        bread: `<ellipse cx="50" cy="52" rx="28" ry="20" fill="${c1}"/><ellipse cx="50" cy="44" rx="28" ry="14" fill="#E8A852"/><rect x="22" y="44" width="56" height="20" fill="${c1}"/>`,
+        egg: `<ellipse cx="50" cy="52" rx="22" ry="28" fill="#FFF8E7"/><ellipse cx="50" cy="52" rx="22" ry="28" fill="${c1}" opacity="0.3"/><ellipse cx="50" cy="46" rx="14" ry="18" fill="#FFF8DC"/><circle cx="50" cy="40" r="8" fill="#FFD700"/><circle cx="50" cy="40" r="4" fill="#FFA500"/>`,
+        pizza: `<circle cx="50" cy="50" r="26" fill="#E8A852"/><circle cx="50" cy="50" r="22" fill="#FFD700"/><circle cx="40" cy="42" r="4" fill="#FF4444"/><circle cx="55" cy="40" r="4" fill="#FF4444"/><circle cx="48" cy="55" r="4" fill="#FF4444"/><circle cx="60" cy="52" r="4" fill="#FF4444"/>`,
+        default: `<circle cx="50" cy="48" r="24" fill="${c1}"/><circle cx="50" cy="48" r="18" fill="${c2}" opacity="0.5"/><ellipse cx="42" cy="40" rx="6" ry="4" fill="#fff" opacity="0.5"/><rect x="48" y="28" width="4" height="16" fill="#4CAF50" rx="2"/>`
+      };
+      const w = word.en.toLowerCase();
+      return foods[w] || foods.default;
+    },
+    // 3 - Nature
+    3: () => {
+      const nature = {
+        sun: `<circle cx="50" cy="50" r="22" fill="#FFD700"/><circle cx="50" cy="50" r="18" fill="#FFEB3B"/><g stroke="#FFD700" stroke-width="3">${[0,45,90,135,180,225,270,315].map(a => `<line x1="${50+28*Math.cos(a*Math.PI/180)}" y1="${50+28*Math.sin(a*Math.PI/180)}" x2="${50+36*Math.cos(a*Math.PI/180)}" y2="${50+36*Math.sin(a*Math.PI/180)}"/>`).join('')}</g>`,
+        moon: `<circle cx="50" cy="50" r="24" fill="#FFD700"/><circle cx="60" cy="44" r="22" fill="${bg}"/><circle cx="42" cy="42" r="3" fill="#FFA500" opacity="0.5"/><circle cx="48" cy="52" r="2" fill="#FFA500" opacity="0.5"/>`,
+        star: `<polygon points="50,18 58,40 82,42 64,56 68,80 50,68 32,80 36,56 18,42 42,40" fill="#FFD700"/><polygon points="50,26 56,42 72,44 60,54 62,70 50,62 38,70 40,54 28,44 44,42" fill="#FFEB3B"/>`,
+        tree: `<rect x="44" y="60" width="12" height="30" fill="#8B4513" rx="2"/><circle cx="50" cy="42" r="22" fill="#4CAF50"/><circle cx="38" cy="48" r="14" fill="#66BB6A"/><circle cx="62" cy="48" r="14" fill="#66BB6A"/><circle cx="50" cy="32" r="14" fill="#43A047"/>`,
+        flower: `<line x1="50" y1="52" x2="50" y2="88" stroke="#4CAF50" stroke-width="3"/><ellipse cx="42" cy="70" rx="8" ry="4" fill="#4CAF50" transform="rotate(-30,42,70)"/><circle cx="50" cy="42" r="8" fill="#FFD700"/><circle cx="38" cy="38" r="9" fill="#FF6B6B"/><circle cx="62" cy="38" r="9" fill="#FF6B6B"/><circle cx="38" cy="52" r="9" fill="#FF6B6B"/><circle cx="62" cy="52" r="9" fill="#FF6B6B"/><circle cx="50" cy="30" r="9" fill="#FF6B6B"/>`,
+        rain: `<path d="M20,30 Q35,10 50,30 Q65,50 80,30" fill="${c1}" opacity="0.6"/><line x1="30" y1="50" x2="26" y2="60" stroke="#87CEEB" stroke-width="2"/><line x1="45" y1="55" x2="41" y2="65" stroke="#87CEEB" stroke-width="2"/><line x1="60" y1="48" x2="56" y2="58" stroke="#87CEEB" stroke-width="2"/><line x1="70" y1="52" x2="66" y2="62" stroke="#87CEEB" stroke-width="2"/>`,
+        snow: `<circle cx="50" cy="50" r="18" fill="#E3F2FD"/><circle cx="40" cy="40" r="3" fill="#fff" stroke="#BBDEFB" stroke-width="0.5"/><circle cx="55" cy="38" r="3" fill="#fff" stroke="#BBDEFB" stroke-width="0.5"/><circle cx="48" cy="52" r="3" fill="#fff" stroke="#BBDEFB" stroke-width="0.5"/><circle cx="60" cy="50" r="3" fill="#fff" stroke="#BBDEFB" stroke-width="0.5"/><circle cx="38" cy="52" r="3" fill="#fff" stroke="#BBDEFB" stroke-width="0.5"/>`,
+        cloud: `<ellipse cx="50" cy="50" rx="28" ry="18" fill="#fff"/><circle cx="34" cy="46" r="14" fill="#fff"/><circle cx="50" cy="42" r="16" fill="#fff"/><circle cx="66" cy="46" r="14" fill="#fff"/><circle cx="50" cy="55" r="12" fill="#E3F2FD"/>`,
+        default: `<circle cx="50" cy="50" r="22" fill="${c1}"/><circle cx="50" cy="50" r="16" fill="${c2}" opacity="0.5"/><path d="M30,40 Q50,20 70,40" fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/>`
+      };
+      const w = word.en.toLowerCase();
+      return nature[w] || nature.default;
+    },
+    // 4 - Objects
+    4: () => {
+      const objects = {
+        book: `<rect x="22" y="20" width="40" height="56" rx="3" fill="${c1}"/><rect x="22" y="22" width="40" height="8" rx="1" fill="${c2}"/><rect x="32" y="36" width="56" height="40" rx="3" fill="${c2}"/><rect x="32" y="36" width="56" height="4" rx="1" fill="${c1}" opacity="0.5"/>`,
+        pen: `<rect x="44" y="18" width="8" height="56" rx="4" fill="${c1}"/><rect x="44" y="18" width="8" height="14" rx="4" fill="${c2}"/><polygon points="44,74 52,74 48,88" fill="#333"/><polygon points="48,88 46,94 50,94" fill="#FFD700"/>`,
+        clock: `<circle cx="50" cy="50" r="26" fill="#fff" stroke="${c1}" stroke-width="4"/><circle cx="50" cy="50" r="2" fill="#333"/><line x1="50" y1="50" x2="50" y2="32" stroke="#333" stroke-width="2.5"/><line x1="50" y1="50" x2="62" y2="50" stroke="#333" stroke-width="2"/>`,
+        key: `<circle cx="40" cy="34" r="10" fill="none" stroke="${c1}" stroke-width="5"/><rect x="48" y="30" width="30" height="8" rx="2" fill="${c1}"/><rect x="70" y="28" width="8" height="12" rx="1" fill="${c1}"/><rect x="58" y="26" width="8" height="6" rx="1" fill="${c1}"/>`,
+        ball: `<circle cx="50" cy="50" r="24" fill="${c1}"/><path d="M26,36 Q50,50 26,64" fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/><path d="M74,36 Q50,50 74,64" fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/>`,
+        hat: `<ellipse cx="50" cy="68" rx="28" ry="8" fill="${c1}"/><rect x="32" y="28" width="36" height="40" rx="6" fill="${c1}"/><rect x="32" y="28" width="36" height="12" rx="4" fill="${c2}"/>`,
+        umbrella: `<path d="M20,52 Q50,8 80,52" fill="${c1}"/><rect x="47" y="52" width="6" height="30" fill="#8B4513" rx="2"/><path d="M75,48 Q80,54 72,52" fill="none" stroke="#8B4513" stroke-width="2"/>`,
+        plane: `<ellipse cx="50" cy="46" rx="32" ry="10" fill="${c1}"/><polygon points="82,46 92,36 92,56" fill="${c2}"/><polygon points="18,46 8,36 8,56" fill="${c2}"/><polygon points="50,36 56,24 44,24" fill="${c2}"/><rect x="48" y="56" width="4" height="12" rx="1" fill="${c2}"/>`,
+        car: `<rect x="14" y="38" width="60" height="22" rx="8" fill="${c1}"/><rect x="24" y="24" width="36" height="16" rx="6" fill="${c1}"/><rect x="28" y="28" width="12" height="8" rx="2" fill="#87CEEB"/><rect x="48" y="28" width="8" height="8" rx="2" fill="#87CEEB"/><circle cx="32" cy="62" r="8" fill="#333"/><circle cx="56" cy="62" r="8" fill="#333"/><circle cx="32" cy="62" r="4" fill="#666"/><circle cx="56" cy="62" r="4" fill="#666"/>`,
+        default: `<rect x="20" y="22" width="60" height="56" rx="10" fill="${c1}"/><rect x="28" y="30" width="44" height="40" rx="6" fill="${c2}" opacity="0.4"/><circle cx="50" cy="50" r="12" fill="#fff" opacity="0.3"/>`
+      };
+      const w = word.en.toLowerCase();
+      return objects[w] || objects.default;
+    },
+    // 5 - People
+    5: () => {
+      const people = {
+        king: `<circle cx="50" cy="50" r="22" fill="#FFD5A5"/><rect x="38" y="32" width="24" height="10" rx="3" fill="#FFD700"/><polygon points="30,32 38,14 50,32 62,14 70,32" fill="#FFD700"/><circle cx="43" cy="48" r="2.5" fill="#333"/><circle cx="57" cy="48" r="2.5" fill="#333"/><path d="M44,54 Q50,58 56,54" fill="none" stroke="#FF8C94" stroke-width="2"/>`,
+        queen: `<circle cx="50" cy="50" r="22" fill="#FFDDB5"/><path d="M30,38 L38,16 L46,38 L54,16 L62,38 L70,16 L70,38" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/><circle cx="43" cy="48" r="2.5" fill="#333"/><circle cx="57" cy="48" r="2.5" fill="#333"/><path d="M44,54 Q50,58 56,54" fill="none" stroke="#FF8C94" stroke-width="2"/>`,
+        eye: `<ellipse cx="50" cy="48" rx="28" ry="22" fill="#fff" stroke="${c1}" stroke-width="2.5"/><circle cx="50" cy="46" r="12" fill="${c2}"/><circle cx="50" cy="46" r="6" fill="#333"/><circle cx="53" cy="43" r="2" fill="#fff"/><ellipse cx="50" cy="48" rx="28" ry="22" fill="none" stroke="${c1}" stroke-width="2.5"/>`,
+        hand: `<rect x="44" y="45" width="8" height="30" rx="3" fill="#FFD5A5"/><circle cx="52" cy="42" r="6" fill="#FFD5A5"/><ellipse cx="38" cy="64" rx="6" ry="4" fill="#FFD5A5" transform="rotate(-20,38,64)"/><ellipse cx="48" cy="68" rx="6" ry="4" fill="#FFD5A5"/><ellipse cx="58" cy="64" rx="6" ry="4" fill="#FFD5A5" transform="rotate(20,58,64)"/>`,
+        heart: `<path d="M50,72 C28,56 20,36 30,26 C40,16 50,26 50,26 C50,26 60,16 70,26 C80,36 72,56 50,72Z" fill="#FF4444"/>`,
+        default: `<circle cx="50" cy="42" r="18" fill="#FFD5A5"/><rect x="38" y="58" width="24" height="28" rx="6" fill="${c1}"/><circle cx="43" cy="40" r="2.5" fill="#333"/><circle cx="57" cy="40" r="2.5" fill="#333"/><path d="M44,46 Q50,50 56,46" fill="none" stroke="#FF8C94" stroke-width="2"/>`
+      };
+      const w = word.en.toLowerCase();
+      return people[w] || people.default;
+    },
+    // 6 - Buildings
+    6: () => {
+      const buildings = {
+        house: `<rect x="22" y="38" width="56" height="40" rx="2" fill="${c1}"/><polygon points="18,42 50,16 82,42" fill="${c2}"/><rect x="42" y="52" width="16" height="26" fill="#8B4513"/><rect x="32" y="44" width="12" height="12" rx="1" fill="#87CEEB"/><rect x="56" y="44" width="12" height="12" rx="1" fill="#87CEEB"/>`,
+        school: `<rect x="16" y="38" width="68" height="44" rx="3" fill="${c1}"/><rect x="44" y="52" width="16" height="30" fill="#8B4513"/><rect x="22" y="44" width="14" height="14" rx="1" fill="#87CEEB"/><rect x="66" y="44" width="14" height="14" rx="1" fill="#87CEEB"/><rect x="22" y="62" width="14" height="14" rx="1" fill="#87CEEB"/><rect x="66" y="62" width="14" height="14" rx="1" fill="#87CEEB"/><rect x="38" y="18" width="24" height="24" fill="${c2}"/><polygon points="50,8 38,18 62,18" fill="${c2}"/>`,
+        default: `<rect x="20" y="38" width="60" height="44" rx="4" fill="${c1}"/><polygon points="16,42 50,16 84,42" fill="${c2}"/><rect x="42" y="52" width="16" height="30" fill="#8B4513" rx="2"/><rect x="30" y="46" width="14" height="14" rx="2" fill="#87CEEB"/>`
+      };
+      const w = word.en.toLowerCase();
+      return buildings[w] || buildings.default;
+    },
+    // 7 - Actions
+    7: () => {
+      const actions = {
+        run: `<circle cx="50" cy="40" r="16" fill="#FFD5A5"/><ellipse cx="50" cy="62" rx="18" ry="12" fill="${c1}"/><line x1="38" y1="62" x2="24" y2="78" stroke="#FFD5A5" stroke-width="5" stroke-linecap="round"/><line x1="62" y1="62" x2="78" y2="78" stroke="#FFD5A5" stroke-width="5" stroke-linecap="round"/><line x1="50" y1="50" x2="36" y2="32" stroke="#FFD5A5" stroke-width="4" stroke-linecap="round"/><line x1="50" y1="50" x2="66" y2="28" stroke="#FFD5A5" stroke-width="4" stroke-linecap="round"/>`,
+        swim: `<circle cx="50" cy="42" r="16" fill="#FFD5A5"/><ellipse cx="50" cy="62" rx="20" ry="14" fill="${c1}"/><path d="M20,56 Q40,44 60,56 Q72,64 82,56" fill="none" stroke="#87CEEB" stroke-width="3"/><circle cx="43" cy="40" r="2" fill="#333"/><circle cx="57" cy="40" r="2" fill="#333"/>`,
+        read: `<rect x="30" y="26" width="28" height="40" rx="3" fill="${c1}"/><rect x="30" y="26" width="28" height="6" fill="${c2}"/><line x1="34" y1="36" x2="54" y2="36" stroke="#fff" stroke-width="1.5" opacity="0.5"/><line x1="34" y1="42" x2="54" y2="42" stroke="#fff" stroke-width="1.5" opacity="0.5"/><line x1="34" y1="48" x2="50" y2="48" stroke="#fff" stroke-width="1.5" opacity="0.5"/><circle cx="46" cy="62" r="14" fill="#FFD5A5"/>`,
+        sing: `<circle cx="50" cy="42" r="16" fill="#FFD5A5"/><path d="M62,34 Q68,28 62,24" fill="none" stroke="#FFD700" stroke-width="2"/><path d="M68,32 Q76,24 68,18" fill="none" stroke="#FFD700" stroke-width="2"/><ellipse cx="50" cy="42" rx="5" ry="3" fill="#FF8C94"/>`,
+        draw: `<rect x="16" y="22" width="50" height="54" rx="3" fill="#fff" stroke="${c1}" stroke-width="1.5"/><circle cx="40" cy="40" r="12" fill="none" stroke="${c2}" stroke-width="2"/><line x1="40" y1="32" x2="40" y2="48" stroke="${c2}" stroke-width="2"/><line x1="28" y1="40" x2="52" y2="40" stroke="${c2}" stroke-width="2"/><rect x="48" y="14" width="8" height="50" rx="2" fill="#8B4513" transform="rotate(15,52,39)"/>`,
+        default: `<circle cx="50" cy="42" r="16" fill="#FFD5A5"/><ellipse cx="50" cy="62" rx="18" ry="12" fill="${c1}"/><circle cx="43" cy="40" r="2" fill="#333"/><circle cx="57" cy="40" r="2" fill="#333"/>`
+      };
+      const w = word.en.toLowerCase();
+      return actions[w] || actions.default;
+    },
+    // 8 - Emotions
+    8: () => {
+      const emotions = {
+        smile: `<circle cx="50" cy="50" r="24" fill="#FFD700"/><circle cx="40" cy="44" r="3" fill="#333"/><circle cx="60" cy="44" r="3" fill="#333"/><path d="M38,56 Q50,68 62,56" fill="none" stroke="#333" stroke-width="2.5"/>`,
+        laugh: `<circle cx="50" cy="50" r="24" fill="#FFD700"/><ellipse cx="40" cy="44" rx="2" ry="3" fill="#333"/><ellipse cx="60" cy="44" rx="2" ry="3" fill="#333"/><path d="M36,54 Q50,72 64,54" fill="none" stroke="#333" stroke-width="2.5"/>`,
+        cry: `<circle cx="50" cy="50" r="24" fill="#FFD700"/><circle cx="40" cy="44" r="3" fill="#333"/><circle cx="60" cy="44" r="3" fill="#333"/><path d="M38,60 Q50,52 62,60" fill="none" stroke="#333" stroke-width="2.5"/><circle cx="36" cy="42" r="2" fill="#87CEEB"/><circle cx="64" cy="42" r="2" fill="#87CEEB"/>`,
+        love: `<path d="M50,72 C28,56 20,36 30,26 C40,16 50,26 50,26 C50,26 60,16 70,26 C80,36 72,56 50,72Z" fill="#FF4444"/>`,
+        angry: `<circle cx="50" cy="50" r="24" fill="#FF6B6B"/><circle cx="40" cy="44" r="3" fill="#333"/><circle cx="60" cy="44" r="3" fill="#333"/><path d="M38,60 Q50,52 62,60" fill="none" stroke="#333" stroke-width="2.5"/><line x1="34" y1="36" x2="44" y2="42" stroke="#333" stroke-width="2"/><line x1="66" y1="36" x2="56" y2="42" stroke="#333" stroke-width="2"/>`,
+        default: `<circle cx="50" cy="50" r="24" fill="${c1}"/><circle cx="40" cy="44" r="3" fill="#333"/><circle cx="60" cy="44" r="3" fill="#333"/><path d="M42,56 Q50,60 58,56" fill="none" stroke="#333" stroke-width="2"/>`
+      };
+      const w = word.en.toLowerCase();
+      return emotions[w] || emotions.default;
+    },
+    // 9 - Colors
+    9: () => {
+      const colorMap = {red:'#FF0000',blue:'#2196F3',green:'#4CAF50',yellow:'#FFEB3B',white:'#FFFFFF',black:'#333333',pink:'#FF69B4',purple:'#9C27B0',orange:'#FF9800',brown:'#795548',gold:'#FFD700',silver:'#C0C0C0'};
+      const fill = colorMap[word.en.toLowerCase()] || c1;
+      return `<circle cx="50" cy="50" r="26" fill="${fill}" stroke="${c2}" stroke-width="2"/><circle cx="50" cy="50" r="16" fill="#fff" opacity="0.3"/>`;
+    },
+    // 0 - Default abstract
+    0: () => {
+      const shapes = [
+        `<circle cx="50" cy="50" r="28" fill="${c1}"/><circle cx="50" cy="50" r="18" fill="${c2}" opacity="0.5"/><text x="50" y="56" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">${word.cn[0]}</text>`,
+        `<rect x="20" y="20" width="60" height="60" rx="14" fill="${c1}"/><rect x="28" y="28" width="44" height="44" rx="8" fill="${c2}" opacity="0.4"/><text x="50" y="56" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">${word.cn[0]}</text>`,
+        `<ellipse cx="50" cy="50" rx="30" ry="24" fill="${c1}"/><ellipse cx="50" cy="50" rx="20" ry="16" fill="${c2}" opacity="0.4"/><text x="50" y="56" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">${word.cn[0]}</text>`,
+        `<polygon points="50,16 82,44 72,82 28,82 18,44" fill="${c1}"/><text x="50" y="56" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">${word.cn[0]}</text>`,
+        `<rect x="22" y="22" width="56" height="56" rx="28" fill="${c1}"/><text x="50" y="56" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">${word.cn[0]}</text>`
+      ];
+      return shapes[h % shapes.length];
+    }
+  };
+  
+  const svgBody = (svgs[cat] || svgs[0])();
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${svgBody}</svg>`;
+}
+
+function hashStr(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;} return h; }
+
+// ==================== USER SYSTEM ====================
+const STORAGE_KEY = 'eating_word_data';
+function loadAllData() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; } }
+function saveAllData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+function getUserData(username) {
+  const all = loadAllData();
+  if (!all[username]) {
+    all[username] = {
+      password: '',
+      vocabBook: {}, // { wordKey: { en, cn, errors } }
+      bankProgress: {}, // { bankKey: { mastered: Set-like-array } }
+      totalScore: 0,
+      totalAnswers: 0,
+      totalCorrect: 0,
+      gamesPlayed: 0,
+      selectedBank: null
+    };
+  }
+  return all;
+}
+
+function saveUserData(username, userData) {
+  const all = loadAllData();
+  all[username] = userData;
+  saveAllData(all);
+}
+
+// ==================== APP STATE ====================
+let currentUser = null;
+let currentUserData = null;
+let selectedBank = null;
+let gameState = null;
+
+// ==================== SCREEN MANAGEMENT ====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ==================== AUTH ====================
+let authMode = 'login';
+document.getElementById('tab-login').addEventListener('click', () => {
+  authMode = 'login';
+  document.getElementById('tab-login').classList.add('active');
+  document.getElementById('tab-register').classList.remove('active');
+  document.getElementById('auth-password2').style.display = 'none';
+  document.getElementById('auth-submit').textContent = '登录';
+  document.getElementById('auth-msg').textContent = '';
+});
+document.getElementById('tab-register').addEventListener('click', () => {
+  authMode = 'register';
+  document.getElementById('tab-register').classList.add('active');
+  document.getElementById('tab-login').classList.remove('active');
+  document.getElementById('auth-password2').style.display = 'block';
+  document.getElementById('auth-submit').textContent = '注册';
+  document.getElementById('auth-msg').textContent = '';
+});
+
+document.getElementById('auth-submit').addEventListener('click', () => {
+  const username = document.getElementById('auth-username').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const password2 = document.getElementById('auth-password2').value;
+  const msgEl = document.getElementById('auth-msg');
+  msgEl.textContent = '';
+
+  if (!username || !password) { msgEl.textContent = '请填写用户名和密码'; return; }
+  if (username.length < 2) { msgEl.textContent = '用户名至少2个字符'; return; }
+  if (password.length < 3) { msgEl.textContent = '密码至少3个字符'; return; }
+
+  const all = loadAllData();
+
+  if (authMode === 'register') {
+    if (password !== password2) { msgEl.textContent = '两次密码不一致'; return; }
+    if (all[username]) { msgEl.textContent = '用户名已存在'; return; }
+    all[username] = {
+      password: password,
+      vocabBook: {},
+      bankProgress: {},
+      totalScore: 0,
+      totalAnswers: 0,
+      totalCorrect: 0,
+      gamesPlayed: 0,
+      selectedBank: null
+    };
+    saveAllData(all);
+    loginUser(username, all[username]);
+  } else {
+    if (!all[username]) { msgEl.textContent = '用户不存在，请先注册'; return; }
+    if (all[username].password !== password) { msgEl.textContent = '密码错误'; return; }
+    loginUser(username, all[username]);
+  }
+});
+
+// Also allow Enter key to submit
+document.getElementById('auth-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('auth-submit').click();
+});
+document.getElementById('auth-password2').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('auth-submit').click();
+});
+
+function loginUser(username, userData) {
+  currentUser = username;
+  currentUserData = userData;
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+  document.getElementById('auth-password2').value = '';
+  document.getElementById('auth-msg').textContent = '';
+  showMenu();
+}
+
+// ==================== MENU ====================
+function showMenu() {
+  showScreen('menu-screen');
+  document.getElementById('menu-username').textContent = currentUser;
+  const avatars = ['🐣','🐱','🐶','🐰','🦊','🐼','🐨','🐸'];
+  document.getElementById('menu-avatar').textContent = avatars[Math.abs(hashStr(currentUser)) % avatars.length];
+  selectedBank = currentUserData.selectedBank;
+  renderWordBanks();
+  updateStartButton();
+}
+
+function renderWordBanks() {
+  const grid = document.getElementById('wordbank-grid');
+  grid.innerHTML = '';
+  for (const [key, bank] of Object.entries(WORD_BANKS)) {
+    const card = document.createElement('div');
+    card.className = 'wordbank-card' + (selectedBank === key ? ' selected' : '');
+    card.dataset.bank = key;
+    const progress = currentUserData.bankProgress[key] || {};
+    const mastered = Object.keys(progress).length;
+    const total = bank.words.length;
+    const pct = total > 0 ? Math.round((mastered / total) * 100) : 0;
+    card.innerHTML = `
+      <div class="wb-icon">${bank.icon}</div>
+      <div class="wb-name">${bank.name}</div>
+      <div class="wb-count">${total} 个单词</div>
+      <div class="wb-progress"><div class="wb-progress-bar" style="width:${pct}%"></div></div>
+    `;
+    card.addEventListener('click', () => {
+      selectedBank = key;
+      currentUserData.selectedBank = key;
+      saveUserData(currentUser, currentUserData);
+      renderWordBanks();
+      updateStartButton();
+    });
+    grid.appendChild(card);
+  }
+}
+
+function updateStartButton() {
+  document.getElementById('btn-start-game').disabled = !selectedBank;
+}
+
+// Speed slider
+const speedLabels = ['极慢','慢速','中速','快速','极快'];
+document.getElementById('speed-slider').addEventListener('input', function() {
+  document.getElementById('speed-label').textContent = speedLabels[this.value - 1];
+});
+
+// ==================== DASHBOARD ====================
+document.getElementById('btn-open-dashboard').addEventListener('click', openDashboard);
+document.getElementById('btn-close-dashboard').addEventListener('click', closeDashboard);
+document.getElementById('dashboard-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeDashboard();
+});
+
+function openDashboard() {
+  const d = currentUserData;
+  const bankName = d.selectedBank ? WORD_BANKS[d.selectedBank].name : '-';
+  document.getElementById('ds-current-bank').textContent = bankName;
+  
+  // Calculate progress
+  let totalWords = 0, masteredWords = 0;
+  for (const [key, bank] of Object.entries(WORD_BANKS)) {
+    totalWords += bank.words.length;
+    const progress = d.bankProgress[key] || {};
+    masteredWords += Object.keys(progress).length;
+  }
+  const overallPct = totalWords > 0 ? Math.round((masteredWords / totalWords) * 100) : 0;
+  document.getElementById('ds-progress').textContent = overallPct + '%';
+  document.getElementById('ds-mastered').textContent = masteredWords + ' / ' + totalWords;
+  
+  document.getElementById('ds-total-score').textContent = d.totalScore || 0;
+  document.getElementById('ds-total-answers').textContent = d.totalAnswers || 0;
+  const accuracy = d.totalAnswers > 0 ? Math.round((d.totalCorrect / d.totalAnswers) * 100) : 0;
+  document.getElementById('ds-accuracy').textContent = accuracy + '%';
+  document.getElementById('ds-games').textContent = d.gamesPlayed || 0;
+  
+  // Vocab list
+  const vocabList = document.getElementById('vocab-list');
+  const vocab = Object.values(d.vocabBook || {});
+  if (vocab.length === 0) {
+    vocabList.innerHTML = '<div class="empty-state">暂无生词，继续加油！</div>';
+  } else {
+    vocab.sort((a, b) => b.errors - a.errors);
+    vocabList.innerHTML = vocab.map(v => `
+      <div class="vocab-item">
+        <div><span class="v-word">${v.en}</span> <span class="v-cn">${v.cn}</span></div>
+        <div class="v-errors">${'🔴'.repeat(Math.min(v.errors, 5))} ${v.errors}次</div>
+      </div>
+    `).join('');
+  }
+  
+  document.getElementById('dashboard-overlay').classList.add('open');
+}
+
+function closeDashboard() {
+  document.getElementById('dashboard-overlay').classList.remove('open');
+}
+
+// ==================== LOGOUT ====================
+document.getElementById('btn-logout').addEventListener('click', () => {
+  currentUser = null;
+  currentUserData = null;
+  selectedBank = null;
+  showScreen('auth-screen');
+});
+
+// ==================== GAME ENGINE ====================
+document.getElementById('btn-start-game').addEventListener('click', startGame);
+document.getElementById('btn-quit-game').addEventListener('click', quitGame);
+document.getElementById('btn-submit').addEventListener('click', checkAnswer);
+document.getElementById('game-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') checkAnswer();
+});
+document.getElementById('btn-speak').addEventListener('click', () => {
+  if (gameState && gameState.currentWord) speakWord(gameState.currentWord.en);
+});
+document.getElementById('btn-play-again').addEventListener('click', startGame);
+document.getElementById('btn-back-menu').addEventListener('click', () => {
+  document.getElementById('gameover-overlay').classList.remove('open');
+  showMenu();
+});
+
+function startGame() {
+  if (!selectedBank) return;
+  
+  const speed = parseInt(document.getElementById('speed-slider').value);
+  const wordCount = parseInt(document.getElementById('word-count-select').value);
+  const gameTime = parseInt(document.getElementById('game-time-select').value);
+  
+  // Build word pool with weighted selection
+  const bank = WORD_BANKS[selectedBank];
+  const vocabBook = currentUserData.vocabBook || {};
+  const bankProgress = currentUserData.bankProgress[selectedBank] || {};
+  
+  // Weight: words with more errors get higher probability
+  let wordPool = bank.words.map(w => {
+    const key = selectedBank + '_' + w.en;
+    const errCount = vocabBook[key] ? vocabBook[key].errors : 0;
+    const mastered = bankProgress[key] || false;
+    // Weight: base 1 + error count * 3, but if mastered reduce weight
+    const weight = mastered ? 0.5 : (1 + errCount * 3);
+    return { ...w, key, weight, errCount };
+  });
+  
+  // Sort by weight and select
+  const totalWeight = wordPool.reduce((s, w) => s + w.weight, 0);
+  const selected = [];
+  const poolCopy = [...wordPool];
+  
+  // Weighted random selection
+  while (selected.length < wordCount && poolCopy.length > 0) {
+    let rand = Math.random() * totalWeight;
+    let cumulative = 0;
+    let chosenIdx = 0;
+    for (let i = 0; i < poolCopy.length; i++) {
+      cumulative += poolCopy[i].weight;
+      if (rand <= cumulative) { chosenIdx = i; break; }
+    }
+    if (chosenIdx >= poolCopy.length) chosenIdx = poolCopy.length - 1;
+    selected.push(poolCopy[chosenIdx]);
+    poolCopy.splice(chosenIdx, 1);
+  }
+  
+  // Shuffle
+  for (let i = selected.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [selected[i], selected[j]] = [selected[j], selected[i]];
+  }
+  
+  // Card lifetime based on speed: speed 1=12s, 5=4s
+  const cardLifetime = Math.max(4000, 14000 - (speed - 1) * 2500);
+  
+  gameState = {
+    words: selected,
+    currentIndex: 0,
+    score: 0,
+    correctCount: 0,
+    wrongCount: 0,
+    newVocabWords: [],
+    speed: speed,
+    cardLifetime: cardLifetime,
+    gameTime: gameTime * 60,
+    timeRemaining: gameTime * 60,
+    isActive: false,
+    currentWord: null,
+    cardTimer: null,
+    gameTimer: null,
+    animals: [],
+    animalInterval: null,
+    damageInterval: null,
+    damageLevel: 0,
+    cardStartTime: 0,
+    acceptingInput: false
+  };
+  
+  showScreen('game-screen');
+  document.getElementById('game-score').textContent = '0';
+  document.getElementById('game-progress').textContent = `0/${selected.length}`;
+  updateTimerDisplay();
+  document.getElementById('game-timer').classList.remove('warning');
+  document.getElementById('game-input').value = '';
+  document.getElementById('game-input').focus();
+  
+  // Start game timer
+  gameState.gameTimer = setInterval(() => {
+    gameState.timeRemaining--;
+    updateTimerDisplay();
+    if (gameState.timeRemaining <= 60) {
+      document.getElementById('game-timer').classList.add('warning');
+    }
+    if (gameState.timeRemaining <= 0) {
+      endGame(false);
+    }
+  }, 1000);
+  
+  gameState.isActive = true;
+  nextWord();
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(gameState.timeRemaining / 60);
+  const secs = gameState.timeRemaining % 60;
+  document.getElementById('game-timer').textContent = `⏱️ ${mins}:${secs.toString().padStart(2,'0')}`;
+}
+
+function nextWord() {
+  if (!gameState || !gameState.isActive) return;
+  
+  // Clear previous card state
+  clearCardState();
+  
+  if (gameState.currentIndex >= gameState.words.length) {
+    endGame(true);
+    return;
+  }
+  
+  gameState.currentWord = gameState.words[gameState.currentIndex];
+  gameState.damageLevel = 0;
+  gameState.cardStartTime = Date.now();
+  gameState.acceptingInput = true;
+  
+  // Render card
+  renderCard(gameState.currentWord);
+  
+  // Update progress
+  document.getElementById('game-progress').textContent = `${gameState.currentIndex + 1}/${gameState.words.length}`;
+  document.getElementById('game-input').value = '';
+  document.getElementById('game-input').focus();
+  
+  // Speak word
+  speakWord(gameState.currentWord.en);
+  
+  // Spawn animals
+  spawnAnimals();
+  
+  // Start card damage timer
+  const damageStepTime = gameState.cardLifetime / 20; // 20 damage steps
+  gameState.damageInterval = setInterval(() => {
+    gameState.damageLevel++;
+    updateCardDamage();
+    if (gameState.damageLevel >= 20) {
+      // Card fully eaten
+      handleCardEaten();
+    }
+  }, damageStepTime);
+  
+  // Move animals continuously
+  gameState.animalMoveInterval = setInterval(moveAnimals, 100);
+}
+
+function renderCard(word) {
+  document.getElementById('word-illustration').innerHTML = getWordIllustration(word);
+  document.getElementById('word-en').textContent = word.en;
+  document.getElementById('word-cn').textContent = word.cn;
+  document.getElementById('card-damage').innerHTML = '';
+  const card = document.getElementById('word-card');
+  card.classList.remove('correct', 'wrong');
+}
+
+function updateCardDamage() {
+  const damageEl = document.getElementById('card-damage');
+  const level = gameState.damageLevel;
+  const holes = [];
+  for (let i = 0; i < Math.min(level, 20); i++) {
+    const size = 15 + (level / 20) * 30;
+    const x = 10 + (i * 23) % 80;
+    const y = 10 + (i * 17) % 80;
+    holes.push(`<div class="card-damage-hole" style="width:${size}px;height:${size}px;left:${x}%;top:${y}%"></div>`);
+  }
+  damageEl.innerHTML = holes.join('');
+  
+  // Also fade the card
+  const card = document.getElementById('word-card');
+  const opacity = Math.max(0.3, 1 - level / 20);
+  card.style.opacity = opacity;
+}
+
+function handleCardEaten() {
+  if (!gameState.acceptingInput) return;
+  gameState.acceptingInput = false;
+  
+  const word = gameState.currentWord;
+  // Wrong: card eaten
+  gameState.score = Math.max(0, gameState.score - 5);
+  gameState.wrongCount++;
+  
+  // Add to vocab book
+  addToVocabBook(word);
+  gameState.newVocabWords.push(word.en);
+  
+  // Update data
+  currentUserData.totalAnswers++;
+  currentUserData.totalScore = Math.max(0, (currentUserData.totalScore || 0) - 5);
+  saveUserData(currentUser, currentUserData);
+  
+  updateScoreDisplay();
+  showFeedback('wrong');
+  document.getElementById('word-card').classList.add('wrong');
+  
+  clearCardState();
+  setTimeout(() => {
+    gameState.currentIndex++;
+    nextWord();
+  }, 600);
+}
+
+function checkAnswer() {
+  if (!gameState || !gameState.isActive || !gameState.acceptingInput) return;
+  
+  const input = document.getElementById('game-input').value.trim().toLowerCase();
+  if (!input) return;
+  
+  const word = gameState.currentWord;
+  gameState.acceptingInput = false;
+  
+  if (input === word.en.toLowerCase()) {
+    // Correct!
+    gameState.score += 10;
+    gameState.correctCount++;
+    currentUserData.totalAnswers++;
+    currentUserData.totalCorrect++;
+    currentUserData.totalScore = (currentUserData.totalScore || 0) + 10;
+    
+    // Mark as mastered in bank progress
+    if (!currentUserData.bankProgress[selectedBank]) {
+      currentUserData.bankProgress[selectedBank] = {};
+    }
+    currentUserData.bankProgress[selectedBank][word.key] = true;
+    
+    // If in vocab book, reduce errors
+    const vk = selectedBank + '_' + word.en;
+    if (currentUserData.vocabBook[vk] && currentUserData.vocabBook[vk].errors > 0) {
+      currentUserData.vocabBook[vk].errors--;
+      if (currentUserData.vocabBook[vk].errors <= 0) {
+        delete currentUserData.vocabBook[vk];
+      }
+    }
+    
+    saveUserData(currentUser, currentUserData);
+    updateScoreDisplay();
+    showFeedback('correct');
+    document.getElementById('word-card').classList.add('correct');
+    document.getElementById('game-input').value = '';
+    
+    clearCardState();
+    setTimeout(() => {
+      gameState.currentIndex++;
+      nextWord();
+    }, 500);
+  } else {
+    // Wrong answer - shake card but don't eat yet
+    document.getElementById('word-card').classList.add('wrong');
+    document.getElementById('game-input').value = '';
+    document.getElementById('game-input').focus();
+    gameState.acceptingInput = true;
+    setTimeout(() => {
+      document.getElementById('word-card').classList.remove('wrong');
+    }, 400);
+  }
+}
+
+function addToVocabBook(word) {
+  const key = selectedBank + '_' + word.en;
+  if (!currentUserData.vocabBook[key]) {
+    currentUserData.vocabBook[key] = { en: word.en, cn: word.cn, errors: 0 };
+  }
+  currentUserData.vocabBook[key].errors++;
+  saveUserData(currentUser, currentUserData);
+}
+
+function updateScoreDisplay() {
+  document.getElementById('game-score').textContent = gameState.score;
+}
+
+function showFeedback(type) {
+  const overlay = document.createElement('div');
+  overlay.className = 'feedback-overlay ' + (type === 'correct' ? 'correct-fb' : 'wrong-fb');
+  overlay.textContent = type === 'correct' ? '✓ 正确!' : '✗ 被吃掉了!';
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.remove(), 800);
+}
+
+// ==================== SPEECH SYNTHESIS ====================
+let speechVoices = [];
+let speechReady = false;
+
+// Preload voices
+function loadVoices() {
+  if ('speechSynthesis' in window) {
+    speechVoices = speechSynthesis.getVoices();
+    if (speechVoices.length > 0) {
+      speechReady = true;
+    }
+  }
+}
+loadVoices();
+if ('speechSynthesis' in window) {
+  speechSynthesis.onvoiceschanged = () => {
+    speechVoices = speechSynthesis.getVoices();
+    speechReady = true;
+  };
+}
+
+function speakWord(text) {
+  if (!('speechSynthesis' in window)) return;
+  // Ensure voices are loaded
+  if (!speechReady) {
+    speechVoices = speechSynthesis.getVoices();
+    speechReady = true;
+  }
+  // Cancel any ongoing speech
+  speechSynthesis.cancel();
+  // Small delay to ensure cancel completes
+  setTimeout(() => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
+    utterance.volume = 1.0;
+    // Try to find an English voice
+    const enVoice = speechVoices.find(v => v.lang.startsWith('en') && v.name.includes('Google'))
+      || speechVoices.find(v => v.lang.startsWith('en-US'))
+      || speechVoices.find(v => v.lang.startsWith('en'));
+    if (enVoice) {
+      utterance.voice = enVoice;
+    }
+    speechSynthesis.speak(utterance);
+  }, 50);
+}
+
+// Prime speech synthesis on first user interaction
+let speechPrimed = false;
+document.addEventListener('click', function primeSpeech() {
+  if (speechPrimed || !('speechSynthesis' in window)) return;
+  speechPrimed = true;
+  const u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  u.rate = 2;
+  speechSynthesis.speak(u);
+}, { once: false });
+
+// ==================== ANIMALS ====================
+const ANIMAL_TYPES = [
+  { emoji: '🐜', img: 'png/ant.png', name: 'ant', speed: 1.2, rotationOffset: 90 },
+  { emoji: '🐝', name: 'bee', speed: 1.5, rotationOffset: 180 },
+  { emoji: '🪲', name: 'beetle', speed: 0.9, rotationOffset: 90 }
+];
+
+function spawnAnimals() {
+  // Clear existing animals
+  clearAnimals();
+  
+  const stage = document.getElementById('game-stage');
+  const count = gameState.speed >= 4 ? 4 : (gameState.speed >= 3 ? 3 : 2);
+  
+  for (let i = 0; i < count; i++) {
+    const type = ANIMAL_TYPES[Math.floor(Math.random() * ANIMAL_TYPES.length)];
+    const el = document.createElement('div');
+    el.className = 'animal';
+    el.dataset.speed = type.speed * (1 + gameState.speed * 0.3);
+    el.dataset.type = type.name;
+    el.dataset.rotationOffset = type.rotationOffset || 0;
+    
+    if (type.img) {
+      // Use PNG image for this animal
+      const img = document.createElement('img');
+      img.src = type.img;
+      img.alt = type.name;
+      img.draggable = false;
+      el.appendChild(img);
+      el.classList.add('animal-img');
+    } else {
+      el.textContent = type.emoji;
+    }
+    
+    // Position at random edge
+    const edge = Math.floor(Math.random() * 4);
+    const stageRect = stage.getBoundingClientRect();
+    let x, y;
+    switch(edge) {
+      case 0: x = Math.random() * (stageRect.width - 40); y = -20; break; // top
+      case 1: x = stageRect.width + 10; y = Math.random() * (stageRect.height - 40); break; // right
+      case 2: x = Math.random() * (stageRect.width - 40); y = stageRect.height + 10; break; // bottom
+      case 3: x = -30; y = Math.random() * (stageRect.height - 40); break; // left
+    }
+    
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    stage.appendChild(el);
+    gameState.animals.push(el);
+  }
+}
+
+function moveAnimals() {
+  if (!gameState || !gameState.isActive) return;
+  
+  const stage = document.getElementById('game-stage');
+  const cardWrapper = document.getElementById('card-wrapper');
+  const cardRect = cardWrapper.getBoundingClientRect();
+  const stageRect = stage.getBoundingClientRect();
+  
+  const centerX = cardRect.left + cardRect.width / 2 - stageRect.left;
+  const centerY = cardRect.top + cardRect.height / 2 - stageRect.top;
+  
+  gameState.animals.forEach(animal => {
+    const speed = parseFloat(animal.dataset.speed);
+    let ax = parseFloat(animal.style.left);
+    let ay = parseFloat(animal.style.top);
+    
+    // Move toward card center
+    const dx = centerX - ax;
+    const dy = centerY - ay;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    // Calculate angle for rotation: face toward card
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    const offset = parseFloat(animal.dataset.rotationOffset) || 0;
+    const rotation = angle + offset;
+    animal.style.transform = `rotate(${rotation}deg)`;
+    animal.style.transition = 'transform 0.15s linear';
+    
+    if (dist < 60) {
+      // Reached the card - eating animation
+      if (!animal.classList.contains('eating')) {
+        animal.classList.add('eating');
+      }
+      // Stay near the card, nibbling
+      const nibbleAngle = Math.random() * Math.PI * 2;
+      const r = 25 + Math.random() * 15;
+      ax = centerX + Math.cos(nibbleAngle) * r;
+      ay = centerY + Math.sin(nibbleAngle) * r;
+    } else {
+      animal.classList.remove('eating');
+      const step = speed * 2;
+      ax += (dx / dist) * step;
+      ay += (dy / dist) * step;
+      
+      // Add some wobble
+      ax += (Math.random() - 0.5) * 3;
+      ay += (Math.random() - 0.5) * 3;
+    }
+    
+    animal.style.left = ax + 'px';
+    animal.style.top = ay + 'px';
+  });
+}
+
+function clearAnimals() {
+  gameState.animals.forEach(a => a.remove());
+  gameState.animals = [];
+}
+
+function clearCardState() {
+  if (gameState.damageInterval) { clearInterval(gameState.damageInterval); gameState.damageInterval = null; }
+  if (gameState.animalMoveInterval) { clearInterval(gameState.animalMoveInterval); gameState.animalMoveInterval = null; }
+  clearAnimals();
+  document.getElementById('card-damage').innerHTML = '';
+  document.getElementById('word-card').style.opacity = '1';
+  const card = document.getElementById('word-card');
+  card.classList.remove('correct', 'wrong');
+}
+
+function quitGame() {
+  if (gameState && gameState.isActive) {
+    gameState.isActive = false;
+    if (gameState.gameTimer) clearInterval(gameState.gameTimer);
+    clearCardState();
+    if (gameState.damageInterval) clearInterval(gameState.damageInterval);
+    if (gameState.animalMoveInterval) clearInterval(gameState.animalMoveInterval);
+  }
+  gameState = null;
+  showMenu();
+}
+
+function endGame(completed) {
+  if (!gameState || !gameState.isActive) return;
+  gameState.isActive = false;
+  
+  if (gameState.gameTimer) clearInterval(gameState.gameTimer);
+  clearCardState();
+  if (gameState.damageInterval) clearInterval(gameState.damageInterval);
+  if (gameState.animalMoveInterval) clearInterval(gameState.animalMoveInterval);
+  
+  currentUserData.gamesPlayed = (currentUserData.gamesPlayed || 0) + 1;
+  saveUserData(currentUser, currentUserData);
+  
+  // Show game over
+  document.getElementById('go-title').textContent = completed ? '🎉 游戏结束' : '⏰ 时间到!';
+  document.getElementById('go-score').textContent = gameState.score;
+  document.getElementById('go-correct').textContent = gameState.correctCount;
+  document.getElementById('go-wrong').textContent = gameState.wrongCount;
+  document.getElementById('go-new-vocab').textContent = gameState.newVocabWords.length;
+  document.getElementById('gameover-overlay').classList.add('open');
+}
+
+// Initialize on load - check if there are users to show
+(function init() {
+  const all = loadAllData();
+  // Show auth screen by default
+  showScreen('auth-screen');
+})();
+</script>
+</body>
+</html>
