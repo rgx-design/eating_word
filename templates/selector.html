@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词图片筛选器</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        .stats { display: inline-block; background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 20px; margin-top: 10px; }
+        
+        .word-card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .word-info { text-align: center; margin-bottom: 30px; }
+        .word-en { font-size: 3em; font-weight: 800; color: #333; }
+        .word-cn { font-size: 1.5em; color: #666; margin-top: 5px; }
+        .word-progress { color: #999; font-size: 0.9em; margin-top: 10px; }
+        
+        .images-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .image-item { aspect-ratio: 1; border: 3px solid #eee; border-radius: 15px; overflow: hidden; cursor: pointer; transition: all 0.3s; position: relative; }
+        .image-item:hover { border-color: #667eea; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(102,126,234,0.3); }
+        .image-item.selected { border-color: #28a745; box-shadow: 0 0 20px rgba(40,167,69,0.4); }
+        .image-item.selected::after { content: '✓'; position: absolute; top: 10px; right: 10px; background: #28a745; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2em; }
+        .image-item img { width: 100%; height: 100%; object-fit: cover; }
+        .image-item.no-image { background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: #999; }
+        
+        .actions { display: flex; gap: 15px; justify-content: center; }
+        .btn { padding: 15px 40px; font-size: 1.1em; border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.4); }
+        .btn-secondary { background: #f8f9fa; color: #666; border: 2px solid #ddd; }
+        .btn-secondary:hover { background: #e9ecef; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .word-list { margin-top: 30px; background: white; border-radius: 20px; padding: 20px; max-height: 300px; overflow-y: auto; }
+        .word-list h3 { margin-bottom: 15px; color: #333; }
+        .word-item { display: inline-block; padding: 8px 15px; margin: 5px; background: #f5f5f5; border-radius: 20px; font-size: 0.9em; }
+        .word-item.completed { background: #d4edda; color: #155724; }
+        .word-item.pending { background: #fff3cd; color: #856404; }
+        .word-item.new-images { border: 2px dashed #007bff; background: #e7f3ff; color: #0c63e4; }
+        .new-badge { display: inline-block; background: #007bff; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
+        .new-hint { background: #e7f3ff; border: 1px dashed #007bff; padding: 10px 15px; border-radius: 10px; margin-bottom: 20px; color: #0c63e4; font-size: 0.95em; text-align: center; }
+        
+        .loading { text-align: center; padding: 50px; color: white; }
+        .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 单词图片筛选器</h1>
+            <p>为每个单词选择最合适的卡通图片</p>
+            <div class="stats" id="stats">加载中...</div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>正在加载单词列表...</p>
+        </div>
+        
+        <div id="main" style="display: none;">
+            <div class="word-card">
+                <div class="word-info">
+                    <div class="word-en" id="word-en">---</div>
+                    <div class="word-cn" id="word-cn">---</div>
+                    <div class="word-progress" id="word-progress">---</div>
+                    <div class="new-hint" id="new-hint" style="display: none;">🆕 这是新下载的候选图片，请选择最合适的一张</div>
+                </div>
+                
+                <div class="images-grid" id="images-grid">
+                    <!-- Images will be inserted here -->
+                </div>
+                
+                <div class="actions">
+                    <button class="btn btn-secondary" id="btn-skip">跳过</button>
+                    <button class="btn btn-primary" id="btn-next" disabled>确认选择</button>
+                </div>
+            </div>
+            
+            <div class="word-list">
+                <h3>单词列表</h3>
+                <div id="word-list"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let words = [];
+        let currentIndex = 0;
+        let selectedImage = null;
+        
+        async function loadWords() {
+            const response = await fetch('/api/words');
+            words = await response.json();
+            currentIndex = words.findIndex(w => !w.selected);
+            if (currentIndex === -1) currentIndex = 0;
+            render();
+            updateStats();
+        }
+        
+        function render() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('main').style.display = 'block';
+            
+            const word = words[currentIndex];
+            document.getElementById('word-en').textContent = word.en;
+            document.getElementById('word-cn').textContent = word.cn;
+            document.getElementById('word-progress').textContent = `进度: ${currentIndex + 1} / ${words.length}`;
+            
+            const newHint = document.getElementById('new-hint');
+            newHint.style.display = word.is_new ? 'block' : 'none';
+            
+            const grid = document.getElementById('images-grid');
+            grid.innerHTML = '';
+            
+            selectedImage = word.selected;
+            
+            word.images.forEach((img, idx) => {
+                const item = document.createElement('div');
+                item.className = `image-item ${selectedImage === img ? 'selected' : ''}`;
+                item.onclick = () => selectImage(img, item);
+                
+                const image = document.createElement('img');
+                image.src = '/' + img;
+                image.alt = `选项 ${idx + 1}`;
+                image.onerror = () => {
+                    item.innerHTML = '<div class="no-image">加载失败</div>';
+                };
+                
+                item.appendChild(image);
+                grid.appendChild(item);
+            });
+            
+            if (word.images.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #999; padding: 40px;">暂无图片，请先运行下载脚本</div>';
+            }
+            
+            document.getElementById('btn-next').disabled = !selectedImage;
+            
+            renderWordList();
+        }
+        
+        function selectImage(img, element) {
+            document.querySelectorAll('.image-item').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedImage = img;
+            document.getElementById('btn-next').disabled = false;
+        }
+        
+        async function confirmSelection() {
+            if (!selectedImage) return;
+            
+            const word = words[currentIndex];
+            const response = await fetch('/api/select', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ en: word.en, image: selectedImage })
+            });
+            
+            const data = await response.json();
+            
+            if (data.next_word) {
+                currentIndex = words.findIndex(w => w.en === data.next_word.en);
+            } else {
+                currentIndex = 0;
+            }
+            
+            render();
+            updateStats();
+        }
+        
+        async function skipWord() {
+            const word = words[currentIndex];
+            const response = await fetch('/api/skip', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ en: word.en })
+            });
+            
+            const data = await response.json();
+            
+            if (data.next_word) {
+                currentIndex = words.findIndex(w => w.en === data.next_word.en);
+            } else {
+                currentIndex = 0;
+            }
+            
+            render();
+        }
+        
+        function renderWordList() {
+            const container = document.getElementById('word-list');
+            container.innerHTML = '';
+            
+            words.forEach((word, idx) => {
+                const item = document.createElement('div');
+                const baseClass = word.selected ? 'completed' : (word.is_new ? 'new-images' : 'pending');
+                item.className = `word-item ${baseClass}`;
+                
+                const badge = word.is_new ? '<span class="new-badge">新</span>' : '';
+                item.innerHTML = `${word.en}${badge}`;
+                
+                if (idx === currentIndex) {
+                    item.style.border = '2px solid #667eea';
+                }
+                item.onclick = () => {
+                    currentIndex = idx;
+                    render();
+                };
+                container.appendChild(item);
+            });
+        }
+        
+        async function updateStats() {
+            const response = await fetch('/api/stats');
+            const stats = await response.json();
+            document.getElementById('stats').textContent = `已完成: ${stats.completed} / ${stats.total}`;
+        }
+        
+        document.getElementById('btn-next').addEventListener('click', confirmSelection);
+        document.getElementById('btn-skip').addEventListener('click', skipWord);
+        
+        loadWords();
+    </script>
+</body>
+</html>
