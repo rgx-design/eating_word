@@ -441,5 +441,12 @@
   "speak": "word_images/speak/3.png",
   "listen": "word_images/listen/3.png",
   "actual": "word_images/actual/2.png",
-  "channel": "word_images/channel/3.png"
+  "channel": "word_images/channel/3.png",
+  "available": "F:/2fen/eating_word\\word_images\\available\\1.png",
+  "category": "F:/2fen/eating_word\\word_images\\category\\1.png",
+  "collapse": "F:/2fen/eating_word\\word_images\\collapse\\1.png",
+  "complex": "F:/2fen/eating_word\\word_images\\complex\\1.png",
+  "concept": "F:/2fen/eating_word\\word_images\\concept\\1.png",
+  "leave": "F:/2fen/eating_word\\word_images\\leave\\1.png",
+  "search": "F:/2fen/eating_word\\word_images\\search\\1.png"
 }

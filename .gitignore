@@ -9,3 +9,5 @@ image_download_progress.json
 download_missing_images.py
 test_download.py
 test_single_download.py
+node_modules/
+npm-debug.log

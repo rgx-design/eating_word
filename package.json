@@ -1,0 +1,12 @@
+{
+  "name": "eating-word",
+  "version": "1.0.0",
+  "description": "Eating Word - 啃单词小游戏",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
